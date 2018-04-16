@@ -2,9 +2,12 @@ package com.zhixing.staffid.ui.presenter;
 
 import com.zhixing.staffid.network.bean.IdList;
 import com.zhixing.staffid.network.bean.ResponseBody;
+import com.zhixing.staffid.network.callback.IdListCallback;
+import com.zhixing.staffid.network.callback.OneListCallback;
 import com.zhixing.staffid.network.callback.ResponseCallback;
 import com.zhixing.staffid.network.manager.DataManager;
-import com.zhixing.staffid.ui.activity.MvpActivity;
+import com.zhixing.staffid.ui.BaseMvpActivity;
+import com.zhixing.staffid.network.IMvpCallback;
 import com.zhixing.staffid.util.AppLog;
 
 import rx.Observer;
@@ -12,33 +15,33 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class ResponsePresenter extends MvpPresenter<MvpActivity> {
+public class MainPresenter extends MvpPresenter<BaseMvpActivity> {
 
     private DataManager dataManager;
     private CompositeSubscription compositeSubscription;
-    private ResponseBody mResponseBody;
-    private ResponseCallback responseCallback;
+    private IdList idListBody;
+    private IdListCallback idListCallback;
 
-    public ResponsePresenter(MvpActivity view){
+    public MainPresenter(BaseMvpActivity view){
         super(view);
         dataManager = new DataManager(view);
         compositeSubscription = new CompositeSubscription();
     }
 
-    public void attachCallback(ResponseCallback callback) {
-        this.responseCallback = callback;
+    public void attachCallback(IdListCallback callback) {
+        this.idListCallback = callback;
     }
 
-
-
-
-    public void getIdList(){
-        compositeSubscription.add(dataManager.getIdList()//将请求封装成的observable
+    public void getIdList(String channel, String version, String uuid, String paltform){
+        compositeSubscription.add(dataManager.getIdList(channel, version, uuid, paltform)//将请求封装成的observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<IdList>() {
                     @Override
                     public void onCompleted() {
+                        if (idListBody != null){
+                            idListCallback.onSuccess(idListBody);
+                        }
                         AppLog.d("Completed!");
                     }
 
@@ -49,6 +52,7 @@ public class ResponsePresenter extends MvpPresenter<MvpActivity> {
 
                     @Override
                     public void onNext(IdList idList) {
+                        idListBody = idList;
                         AppLog.d("Item: " +idList);
                     }
                 })

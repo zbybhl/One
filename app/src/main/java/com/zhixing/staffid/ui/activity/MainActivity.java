@@ -6,17 +6,27 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.zhixing.staffid.R;
+import com.zhixing.staffid.network.bean.IdList;
+import com.zhixing.staffid.network.callback.IdListCallback;
+import com.zhixing.staffid.ui.BaseMvpActivity;
+import com.zhixing.staffid.ui.presenter.MainPresenter;
 import com.zhixing.staffid.ui.fragment.AllFragment;
 import com.zhixing.staffid.ui.fragment.MeFragment;
 import com.zhixing.staffid.ui.fragment.OneFragment;
-import com.zhixing.staffid.ui.presenter.ResponsePresenter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends MvpActivity {
+
+public class MainActivity extends BaseMvpActivity<MainPresenter> {
+    private MainPresenter mainPresenter = new MainPresenter(this);
+    private String channel = "mi";
+    private String version = "4.0.2";
+    private String uuid = "ffffffff-a90e-706a-63f7-ccf973aae5ee";
+    private String platform = "android";
 
 
     @Bind(R.id.home_container)
@@ -24,7 +34,6 @@ public class MainActivity extends MvpActivity {
     @Bind(R.id.bottom_tab_layout)
     BottomNavigationView bottomTabLayout;
 
-    ResponsePresenter presenter= new  ResponsePresenter(this);
     private Fragment mOneFragment = new OneFragment();
     private Fragment mAllFragment = new AllFragment();
     private Fragment mMeFragment = new MeFragment();
@@ -40,8 +49,6 @@ public class MainActivity extends MvpActivity {
 
     private void initView() {
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.home_container,mOneFragment).commit();
-
         bottomTabLayout.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -49,44 +56,80 @@ public class MainActivity extends MvpActivity {
                 return true;
             }
         });
-
     }
 
-    private void onTabItemSelected(int id){
+    private void onTabItemSelected(int id) {
         Fragment fragment = null;
-        switch (id){
+        switch (id) {
             case R.id.item_one:
                 fragment = mOneFragment;
                 break;
             case R.id.item_all:
                 fragment = mAllFragment;
                 break;
-
             case R.id.item_me:
                 fragment = mMeFragment;
                 break;
-
         }
-        if(fragment!=null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.home_container,fragment).commit();
+
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.home_container, fragment).commit();
         }
     }
 
+    @Override
+    public void showdata (String string){
+        Toast.makeText(this, "查询全部数据==>" + string, Toast.LENGTH_SHORT).show();
+    }
+
+//    @OnClick(R.id.tx_test)
+//    public void onViewClicked () {
+//        mainPresenter.attachCallback(responseCallback); //先注册回调，再请求网络
+//        mainPresenter.getIdList(channel, version, uuid, platform);
+//    }
+
+    private IdListCallback responseCallback = new IdListCallback() {
+        @Override
+        public void onSuccess(String msg) {
+
+        }
+
+        @Override
+        public void onSuccess(IdList idList) {
+
+        }
+
+        @Override
+        public void onFailure(String msg) {
+
+        }
+
+        @Override
+        public void onError(String errorMsg) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    };
 
     @Override
-    public void showLoading() {
+    public void showLoading () {
         super.showLoading();
     }
 
     @Override
-    public void hideLoading() {
+    public void hideLoading () {
         super.hideLoading();
     }
 
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy () {
         super.onDestroy();
+        mainPresenter.destroy();
         presenter.destroy();
     }
 

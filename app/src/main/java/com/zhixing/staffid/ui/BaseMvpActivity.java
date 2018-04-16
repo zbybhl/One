@@ -1,4 +1,4 @@
-package com.zhixing.staffid.ui.activity;
+package com.zhixing.staffid.ui;
 
 /**
  * Created by zhaobiying
@@ -10,11 +10,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.zhixing.staffid.ui.IMvpView;
 import com.zhixing.staffid.ui.presenter.MvpPresenter;
 import com.zhixing.staffid.util.WidgetUtil;
 
-public abstract class MvpActivity extends AppCompatActivity implements IMvpView {
+public abstract class BaseMvpActivity<P extends MvpPresenter> extends AppCompatActivity implements IMvpView{
+    protected P presenter;
     private ProgressDialog mProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

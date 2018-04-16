@@ -3,7 +3,7 @@ package com.zhixing.staffid.ui.presenter;
 import com.zhixing.staffid.app.StaffIDApplication;
 import com.zhixing.staffid.dao.NoteDao;
 import com.zhixing.staffid.entity.Note;
-import com.zhixing.staffid.ui.activity.MvpActivity;
+import com.zhixing.staffid.ui.BaseMvpActivity;
 
 import java.util.List;
 
@@ -12,12 +12,12 @@ import java.util.List;
  * 2018/4/2.
  */
 
-public class LoadDataTestPresenter extends MvpPresenter<MvpActivity> {
+public class LoadDataTestPresenter extends MvpPresenter<BaseMvpActivity> {
     private NoteDao noteDao;
 
     private Note note;
 
-    public LoadDataTestPresenter(MvpActivity view) {
+    public LoadDataTestPresenter(BaseMvpActivity view) {
         super(view);
     }
 

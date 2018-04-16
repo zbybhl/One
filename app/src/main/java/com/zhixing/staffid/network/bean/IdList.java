@@ -8,9 +8,8 @@ import java.util.List;
  */
 public class IdList {
 
-
-
     private int res;
+
     private List<String> data;
 
     public int getRes() {
