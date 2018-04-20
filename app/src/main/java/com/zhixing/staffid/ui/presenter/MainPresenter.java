@@ -1,13 +1,9 @@
 package com.zhixing.staffid.ui.presenter;
 
 import com.zhixing.staffid.network.bean.IdList;
-import com.zhixing.staffid.network.bean.ResponseBody;
 import com.zhixing.staffid.network.callback.IdListCallback;
-import com.zhixing.staffid.network.callback.OneListCallback;
-import com.zhixing.staffid.network.callback.ResponseCallback;
 import com.zhixing.staffid.network.manager.DataManager;
 import com.zhixing.staffid.ui.BaseMvpActivity;
-import com.zhixing.staffid.network.IMvpCallback;
 import com.zhixing.staffid.util.AppLog;
 
 import rx.Observer;

@@ -2,6 +2,7 @@ package com.zhixing.staffid.network.callback;
 
 import com.zhixing.staffid.network.IMvpCallback;
 import com.zhixing.staffid.network.bean.IdList;
+import com.zhixing.staffid.network.bean.OneList;
 
 public abstract class IdListCallback implements IMvpCallback {
     /**

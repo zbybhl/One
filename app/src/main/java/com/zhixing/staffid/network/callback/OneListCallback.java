@@ -2,6 +2,7 @@ package com.zhixing.staffid.network.callback;
 
 import com.zhixing.staffid.network.IMvpCallback;
 import com.zhixing.staffid.network.bean.IdList;
+import com.zhixing.staffid.network.bean.OneList;
 
 public abstract class OneListCallback implements IMvpCallback {
     /**
@@ -12,7 +13,7 @@ public abstract class OneListCallback implements IMvpCallback {
     @Override
     public abstract void onSuccess(String data);
 
-    public abstract void onSuccess(IdList idList);
+    public abstract void onSuccess(OneList oneList);
 
     /**
      * 使用网络API接口请求方式时，虽然已经请求成功但是由

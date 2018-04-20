@@ -27,7 +27,7 @@ public class OneList {
 
         private Weather weather;
 
-        private Date date;
+        private String date;
 
         private List<Content_list> content_list;
 
@@ -43,10 +43,10 @@ public class OneList {
         public Weather getWeather(){
             return this.weather;
         }
-        public void setDate(Date date){
+        public void setDate(String date){
             this.date = date;
         }
-        public Date getDate(){
+        public String getDate(){
             return this.date;
         }
         public void setContent_list(List<Content_list> content_list){
@@ -162,9 +162,9 @@ public class OneList {
 
             private int like_count;
 
-            private Date post_date;
+            private String post_date;
 
-            private Date last_update_date;
+            private String last_update_date;
 
             private Author author;
 
@@ -268,16 +268,16 @@ public class OneList {
             public int getLike_count(){
                 return this.like_count;
             }
-            public void setPost_date(Date post_date){
+            public void setPost_date(String post_date){
                 this.post_date = post_date;
             }
-            public Date getPost_date(){
+            public String getPost_date(){
                 return this.post_date;
             }
-            public void setLast_update_date(Date last_update_date){
+            public void setLast_update_date(String last_update_date){
                 this.last_update_date = last_update_date;
             }
-            public Date getLast_update_date(){
+            public String getLast_update_date(){
                 return this.last_update_date;
             }
             public void setAuthor(Author author){

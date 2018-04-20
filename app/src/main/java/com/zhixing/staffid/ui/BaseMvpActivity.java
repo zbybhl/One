@@ -21,8 +21,6 @@ public abstract class BaseMvpActivity<P extends MvpPresenter> extends AppCompatA
         super.onCreate(savedInstanceState);
     }
 
-
-
     @Override
     public void showLoading() {
         hideLoading();

@@ -1,7 +1,5 @@
 package com.zhixing.staffid.network;
 
-import com.zhixing.staffid.network.bean.ResponseBody;
-
 /**
  * Created by zhaobiying
  * 2018/4/1.

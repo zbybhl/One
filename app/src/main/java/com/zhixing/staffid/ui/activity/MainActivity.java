@@ -4,18 +4,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.zhixing.staffid.R;
-import com.zhixing.staffid.network.bean.IdList;
-import com.zhixing.staffid.network.callback.IdListCallback;
 import com.zhixing.staffid.ui.BaseMvpActivity;
 import com.zhixing.staffid.ui.presenter.MainPresenter;
 import com.zhixing.staffid.ui.fragment.AllFragment;
 import com.zhixing.staffid.ui.fragment.MeFragment;
 import com.zhixing.staffid.ui.fragment.OneFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,21 +26,19 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseMvpActivity<MainPresenter> {
     private MainPresenter mainPresenter = new MainPresenter(this);
-    private String channel = "mi";
-    private String version = "4.0.2";
-    private String uuid = "ffffffff-a90e-706a-63f7-ccf973aae5ee";
-    private String platform = "android";
-
 
     @Bind(R.id.home_container)
     FrameLayout homeContainer;
     @Bind(R.id.bottom_tab_layout)
     BottomNavigationView bottomTabLayout;
 
-    private Fragment mOneFragment = new OneFragment();
-    private Fragment mAllFragment = new AllFragment();
-    private Fragment mMeFragment = new MeFragment();
-
+    private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
+    private List<Fragment> fragments;
+    private Fragment mOneFragment;
+    private Fragment mAllFragment;
+    private Fragment mMeFragment;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,23 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
+        updateFragment();
     }
 
     private void initView() {
+        fragmentManager = getSupportFragmentManager();
+        transaction = fragmentManager.beginTransaction();
+        fragments = new ArrayList<>();
+        mOneFragment = new OneFragment();
+        mAllFragment = new AllFragment();
+        mMeFragment = new MeFragment();
+        fragments.add(mOneFragment);
+        fragments.add(mAllFragment);
+        fragments.add(mMeFragment);
+
+        transaction.add(R.id.home_container, mOneFragment);
+        transaction.add(R.id.home_container, mAllFragment);
+        transaction.add(R.id.home_container, mMeFragment);
 
         bottomTabLayout.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -59,61 +74,41 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
     }
 
     private void onTabItemSelected(int id) {
-        Fragment fragment = null;
         switch (id) {
             case R.id.item_one:
-                fragment = mOneFragment;
+                switchFragment(0);
                 break;
             case R.id.item_all:
-                fragment = mAllFragment;
+                switchFragment(1);
                 break;
             case R.id.item_me:
-                fragment = mMeFragment;
+                switchFragment(2);
                 break;
         }
+    }
 
-        if (fragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.home_container, fragment).commit();
+    void updateFragment(){
+        transaction.show(mOneFragment).hide(mAllFragment).hide(mMeFragment);
+        transaction.commit();
+    }
+
+    private void switchFragment(int index){
+        transaction = fragmentManager.beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        for(int i = 0; i < fragments.size(); i++){
+            if (index == i){
+                transaction.show(fragments.get(index));
+            }else {
+                transaction.hide(fragments.get(i));
+            }
         }
+        transaction.commit();
     }
 
     @Override
     public void showdata (String string){
         Toast.makeText(this, "查询全部数据==>" + string, Toast.LENGTH_SHORT).show();
     }
-
-//    @OnClick(R.id.tx_test)
-//    public void onViewClicked () {
-//        mainPresenter.attachCallback(responseCallback); //先注册回调，再请求网络
-//        mainPresenter.getIdList(channel, version, uuid, platform);
-//    }
-
-    private IdListCallback responseCallback = new IdListCallback() {
-        @Override
-        public void onSuccess(String msg) {
-
-        }
-
-        @Override
-        public void onSuccess(IdList idList) {
-
-        }
-
-        @Override
-        public void onFailure(String msg) {
-
-        }
-
-        @Override
-        public void onError(String errorMsg) {
-
-        }
-
-        @Override
-        public void onComplete() {
-
-        }
-    };
 
     @Override
     public void showLoading () {

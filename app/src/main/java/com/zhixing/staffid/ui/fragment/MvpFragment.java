@@ -9,7 +9,6 @@ import com.zhixing.staffid.ui.IBaseFragment;
 import com.zhixing.staffid.ui.IMvpView;
 import com.zhixing.staffid.ui.presenter.MvpPresenter;
 
-
 /**
  * created by zhaobiying
  * on 2018/4/12
@@ -32,7 +31,6 @@ public abstract class MvpFragment<P extends MvpPresenter> extends IBaseFragment 
             presenter.registerEventBusListener(this);
         }
     }
-
 
     @Override
     public void onDestroy() {
