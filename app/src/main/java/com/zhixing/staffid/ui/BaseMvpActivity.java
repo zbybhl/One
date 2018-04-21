@@ -10,7 +10,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+
 import com.zhixing.staffid.ui.presenter.MvpPresenter;
+import com.zhixing.staffid.util.AppLog;
 import com.zhixing.staffid.util.WidgetUtil;
 
 public abstract class BaseMvpActivity<P extends MvpPresenter> extends AppCompatActivity implements IMvpView{
@@ -19,6 +21,36 @@ public abstract class BaseMvpActivity<P extends MvpPresenter> extends AppCompatA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        onMvpInit();
+
+        if (presenter != null) {
+            //注册Activity
+            presenter.setView(this);
+            presenter.registerEventBusListener(this);
+        }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    public void  showdata(Object object) {
+
+    }
+
+    protected void onMvpInit() {
+        MvpHelper<P> mvpHelper = new MvpHelper<>(this);
+        Class<P> pClass = mvpHelper.getPresenterClass();
+        if (pClass != null) {
+            try {
+                presenter = pClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        AppLog.d("presenter = " + presenter);
     }
 
     @Override
@@ -35,16 +67,15 @@ public abstract class BaseMvpActivity<P extends MvpPresenter> extends AppCompatA
     }
 
     @Override
-    public Context getContext() {
-        return this;
-    }
-
-    public void  showdata(String string) {
-    }
-
-    @Override
     protected void onDestroy() {
+        if (presenter != null) {
+            //反注册Activity
+            presenter.unregisterEventBusListener(this);
+            presenter.destroy();
+        }
+        mProgressDialog=null;
+        presenter=null;
         super.onDestroy();
-    }
 
+    }
 }

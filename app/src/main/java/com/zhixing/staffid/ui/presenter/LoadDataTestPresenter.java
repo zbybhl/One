@@ -17,11 +17,6 @@ public class LoadDataTestPresenter extends MvpPresenter<BaseMvpActivity> {
 
     private Note note;
 
-    public LoadDataTestPresenter(BaseMvpActivity view) {
-        super(view);
-    }
-
-
     public void loadData() {
         noteDao = StaffIDApplication.getDbInstance().getSession().getNoteDao();
 //        note = new Note((long) 1, "2", "3", new Date());

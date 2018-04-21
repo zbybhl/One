@@ -1,7 +1,6 @@
 package com.zhixing.staffid.ui.presenter;
 
 import com.zhixing.staffid.network.bean.IdList;
-import com.zhixing.staffid.network.callback.IdListCallback;
 import com.zhixing.staffid.network.manager.DataManager;
 import com.zhixing.staffid.ui.BaseMvpActivity;
 import com.zhixing.staffid.util.AppLog;
@@ -16,17 +15,15 @@ public class MainPresenter extends MvpPresenter<BaseMvpActivity> {
     private DataManager dataManager;
     private CompositeSubscription compositeSubscription;
     private IdList idListBody;
-    private IdListCallback idListCallback;
 
-    public MainPresenter(BaseMvpActivity view){
-        super(view);
+
+    @Override
+    public void setView(BaseMvpActivity view) {
+        super.setView(view);
         dataManager = new DataManager(view);
         compositeSubscription = new CompositeSubscription();
     }
 
-    public void attachCallback(IdListCallback callback) {
-        this.idListCallback = callback;
-    }
 
     public void getIdList(String channel, String version, String uuid, String paltform){
         compositeSubscription.add(dataManager.getIdList(channel, version, uuid, paltform)//将请求封装成的observable
@@ -36,7 +33,7 @@ public class MainPresenter extends MvpPresenter<BaseMvpActivity> {
                     @Override
                     public void onCompleted() {
                         if (idListBody != null){
-                            idListCallback.onSuccess(idListBody);
+                            getView().showdata(idListBody);
                         }
                         AppLog.d("Completed!");
                     }
@@ -55,6 +52,9 @@ public class MainPresenter extends MvpPresenter<BaseMvpActivity> {
 
         );
     }
+
+
+
     @Override
     public void destroy(){
         if (compositeSubscription.hasSubscriptions()){

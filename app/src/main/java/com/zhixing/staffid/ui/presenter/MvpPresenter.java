@@ -17,9 +17,7 @@ public class MvpPresenter<V extends IMvpView> implements IMvpPresenter<V> {
     protected V view;
     protected Context context;
     private EventBus eventBus;
-    public MvpPresenter(V view){
-        this.view = view;
-    }
+
     @Override
     public V getView() {
         return view;
@@ -30,15 +28,6 @@ public class MvpPresenter<V extends IMvpView> implements IMvpPresenter<V> {
     public void setView(V view) {
         this.view = view;
         this.context = view.getContext();
-    }
-
-
-    @Override
-    public void destroy() {
-        unregisterEventBusListener(this);
-        this.view = null;
-        this.context = null;
-        this.eventBus = null;
     }
 
     /*
@@ -68,6 +57,15 @@ public class MvpPresenter<V extends IMvpView> implements IMvpPresenter<V> {
     }
 
     public void onEvent(Object object) {
+    }
+
+
+    @Override
+    public void destroy() {
+        unregisterEventBusListener(this);
+        this.view = null;
+        this.context = null;
+        this.eventBus = null;
     }
 
 }

@@ -2,10 +2,11 @@ package com.zhixing.staffid.ui.presenter;
 
 import com.zhixing.staffid.network.bean.IdList;
 import com.zhixing.staffid.network.bean.OneList;
-import com.zhixing.staffid.network.callback.IdListCallback;
-import com.zhixing.staffid.network.callback.OneListCallback;
+
 import com.zhixing.staffid.network.manager.DataManager;
-import com.zhixing.staffid.ui.BaseMvpActivity;
+
+
+import com.zhixing.staffid.ui.fragment.OneFragment;
 import com.zhixing.staffid.util.AppLog;
 
 import rx.Observer;
@@ -13,27 +14,19 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class OnePresenter extends MvpPresenter<BaseMvpActivity> {
+public class OnePresenter extends MvpPresenter<OneFragment> {
 
     private DataManager dataManager;
     private CompositeSubscription compositeSubscription;
     private IdList idListBody;
-    private IdListCallback idListCallback;
     private OneList oneListBody;
-    private OneListCallback oneListCallback;
 
-    public OnePresenter(BaseMvpActivity view){
-        super(view);
-        dataManager = new DataManager(view);
+
+    @Override
+    public void setView(OneFragment view) {
+        super.setView(view);
+        dataManager = new DataManager(view.getActivity());
         compositeSubscription = new CompositeSubscription();
-    }
-
-    public void attachIdListCallback(IdListCallback callback) {
-        this.idListCallback = callback;
-    }
-
-    public void attachOneListCallback(OneListCallback callback) {
-        this.oneListCallback = callback;
     }
 
     public void getIdList(String channel, String version, String uuid, String platform){
@@ -44,7 +37,7 @@ public class OnePresenter extends MvpPresenter<BaseMvpActivity> {
                     @Override
                     public void onCompleted() {
                         if (idListBody != null){
-                            idListCallback.onSuccess(idListBody);
+                            getView().selectId(idListBody);
                         }
                         AppLog.d("Completed!");
                     }
@@ -72,7 +65,7 @@ public class OnePresenter extends MvpPresenter<BaseMvpActivity> {
                     @Override
                     public void onCompleted() {
                         if (oneListBody != null){
-                            oneListCallback.onSuccess(oneListBody);
+                            getView().showOneList(oneListBody);
                         }
                         AppLog.d("Completed!");
                     }

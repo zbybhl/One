@@ -25,7 +25,6 @@ import butterknife.ButterKnife;
 
 
 public class MainActivity extends BaseMvpActivity<MainPresenter> {
-    private MainPresenter mainPresenter = new MainPresenter(this);
 
     @Bind(R.id.home_container)
     FrameLayout homeContainer;
@@ -105,10 +104,6 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
         transaction.commit();
     }
 
-    @Override
-    public void showdata (String string){
-        Toast.makeText(this, "查询全部数据==>" + string, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void showLoading () {
@@ -120,11 +115,15 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
         super.hideLoading();
     }
 
+    @Override
+    public void showdata(Object object) {
+
+    }
+
 
     @Override
     protected void onDestroy () {
         super.onDestroy();
-        mainPresenter.destroy();
         presenter.destroy();
     }
 
