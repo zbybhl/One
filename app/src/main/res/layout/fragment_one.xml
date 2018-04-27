@@ -14,9 +14,10 @@
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/dayTextView"
@@ -24,25 +25,21 @@
                 android:textSize="35sp"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"/>
 
-            <TextView
+            <com.zhixing.staffid.widget.SmallCornerView
                 android:id="@+id/monthAndYearTextView"
                 android:textSize="10sp"
-                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/dayTextView"
                 android:layout_alignBottom="@+id/dayTextView"
-                android:paddingBottom="10dp"/>
-
-            <ImageView
-                android:id="@+id/extendImageView"
-                android:layout_toRightOf="@+id/monthAndYearTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                app:scv_color="@color/black"
+                app:scv_orientation="right"/>
 
             <TextView
                 android:id="@+id/cityAndWeather"
@@ -51,17 +48,22 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/dayTextView"
-                android:layout_marginRight="20dp"
-                android:paddingBottom="10dp"/>
-
+                android:layout_marginRight="20dp" />
+            <View android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:alpha="0.6"
+                android:background="@android:color/darker_gray"
+                />
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar >
 
-    <TextView
-        android:id="@+id/textView"
+    <FrameLayout
+        android:id="@+id/fragmnet_select_date"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="你好" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+    </FrameLayout>
 
 </LinearLayout>

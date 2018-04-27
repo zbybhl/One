@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SmallCornerView">
+
+        <!--背景颜色-->
+        <attr name="scv_color" format="reference"/>
+        <!--倾斜放向-->
+        <attr name="scv_orientation" format="enum">
+            <!--右角标，向左侧倾斜-->
+            <enum name="right" value="0"/>
+            <!--左角标，向右侧倾斜-->
+            <enum name="left" value="1"/>
+        </attr>
+    </declare-styleable>
+
+</resources>

@@ -8,20 +8,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.zhixing.staffid.R;
 import com.zhixing.staffid.ui.BaseMvpActivity;
-import com.zhixing.staffid.ui.presenter.MainPresenter;
 import com.zhixing.staffid.ui.fragment.AllFragment;
 import com.zhixing.staffid.ui.fragment.MeFragment;
 import com.zhixing.staffid.ui.fragment.OneFragment;
+import com.zhixing.staffid.ui.presenter.MainPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class MainActivity extends BaseMvpActivity<MainPresenter> {
@@ -30,6 +30,7 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
     FrameLayout homeContainer;
     @Bind(R.id.bottom_tab_layout)
     BottomNavigationView bottomTabLayout;
+
 
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
@@ -86,18 +87,18 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
         }
     }
 
-    void updateFragment(){
+    void updateFragment() {
         transaction.show(mOneFragment).hide(mAllFragment).hide(mMeFragment);
         transaction.commit();
     }
 
-    private void switchFragment(int index){
+    private void switchFragment(int index) {
         transaction = fragmentManager.beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        for(int i = 0; i < fragments.size(); i++){
-            if (index == i){
+        for (int i = 0; i < fragments.size(); i++) {
+            if (index == i) {
                 transaction.show(fragments.get(index));
-            }else {
+            } else {
                 transaction.hide(fragments.get(i));
             }
         }
@@ -106,12 +107,12 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
 
 
     @Override
-    public void showLoading () {
+    public void showLoading() {
         super.showLoading();
     }
 
     @Override
-    public void hideLoading () {
+    public void hideLoading() {
         super.hideLoading();
     }
 
@@ -122,7 +123,7 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
 
 
     @Override
-    protected void onDestroy () {
+    protected void onDestroy() {
         super.onDestroy();
         presenter.destroy();
     }

@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zhixing.staffid.R;
@@ -19,11 +20,14 @@ import com.zhixing.staffid.ui.presenter.OnePresenter;
 import com.zhixing.staffid.util.PermissionsActivity;
 import com.zhixing.staffid.util.PermissionsChecker;
 import com.zhixing.staffid.util.SystemUtil;
+import com.zhixing.staffid.widget.SmallCornerView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * created by zhaobiying
@@ -39,18 +43,16 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     };
     @Bind(R.id.dayTextView)
     TextView dayTextView;
-    @Bind(R.id.monthAndYearTextView)
-    TextView monthAndYearTextView;
-    @Bind(R.id.extendImageView)
-    ImageView extendImageView;
     @Bind(R.id.cityAndWeather)
     TextView cityAndWeather;
     @Bind(R.id.one_toolbar)
     Toolbar oneToolbar;
+    @Bind(R.id.monthAndYearTextView)
+    SmallCornerView monthAndYearTextView;
+
 
     private PermissionsChecker mPermissionsChecker; // 权限检测器
 
-    private View mRootView;
 
     private String channel;
     private String version;
@@ -58,6 +60,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     private String platform = "android";
 
     private String oneListID;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +86,14 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         presenter.getIdList(channel, version, uuid, platform);
     }
 
+    @OnClick(R.id.monthAndYearTextView)
+    public void onViewClicked() {
+        if(monthAndYearTextView.getOrientation()==0)
+           monthAndYearTextView.setOrientation(1);
+        else
+            monthAndYearTextView.setOrientation(0);
+    }
+
     private void startPermissionsActivity() {
         PermissionsActivity.startActivityForResult(mvpActivity, REQUEST_CODE, PERMISSIONS);
     }
@@ -96,11 +107,12 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         }
     }
 
-    public void selectId(IdList idList){
-           oneListID = idList.getData().get(0);
-           presenter.getOneList(oneListID, channel, version, uuid, platform);
+    public void selectId(IdList idList) {
+        oneListID = idList.getData().get(0);
+        presenter.getOneList(oneListID, channel, version, uuid, platform);
     }
-    public void showOneList(OneList oneList){
+
+    public void showOneList(OneList oneList) {
         Date date = oneList.getData().getWeather().getDate();
         SimpleDateFormat ftDay = new SimpleDateFormat("dd");
         dayTextView.setText(ftDay.format(date));
@@ -136,4 +148,12 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     public void hideLoading() {
 
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+
 }
