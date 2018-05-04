@@ -4,11 +4,10 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zhixing.staffid.R;
@@ -16,6 +15,7 @@ import com.zhixing.staffid.constants.NumberToMonth;
 import com.zhixing.staffid.network.bean.IdList;
 import com.zhixing.staffid.network.bean.OneList;
 import com.zhixing.staffid.ui.MvpFragment;
+import com.zhixing.staffid.ui.pojo.DayList;
 import com.zhixing.staffid.ui.presenter.OnePresenter;
 import com.zhixing.staffid.util.PermissionsActivity;
 import com.zhixing.staffid.util.PermissionsChecker;
@@ -23,7 +23,9 @@ import com.zhixing.staffid.util.SystemUtil;
 import com.zhixing.staffid.widget.SmallCornerView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -60,7 +62,8 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     private String platform = "android";
 
     private String oneListID;
-
+    private IdList idList;
+    private List<DayList> dayList=new ArrayList<DayList>();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,14 +87,26 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         }
         setSystemParameter();
         presenter.getIdList(channel, version, uuid, platform);
+
     }
 
     @OnClick(R.id.monthAndYearTextView)
     public void onViewClicked() {
-        if(monthAndYearTextView.getOrientation()==0)
-           monthAndYearTextView.setOrientation(1);
-        else
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        if(monthAndYearTextView.getOrientation()==0) {
+            monthAndYearTextView.setOrientation(1);
+            transaction.add(R.id.fragmnet_select_date, DateListFragmnet.getInstance());
+            DateListFragmnet.getInstance().setDayLists(dayList);
+            transaction.commitAllowingStateLoss();
+
+
+        }
+        else {
             monthAndYearTextView.setOrientation(0);
+            transaction.remove(DateListFragmnet.getInstance())
+                    .commitAllowingStateLoss();
+        }
     }
 
     private void startPermissionsActivity() {
@@ -107,11 +122,19 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         }
     }
 
+    /**
+     * @param idList presenter返回的Idlist列表
+     */
     public void selectId(IdList idList) {
+        this.idList=idList;
         oneListID = idList.getData().get(0);
         presenter.getOneList(oneListID, channel, version, uuid, platform);
+        getOneList();
     }
 
+    /**
+     * @param oneList presenter返回的OneList列表
+     */
     public void showOneList(OneList oneList) {
         Date date = oneList.getData().getWeather().getDate();
         SimpleDateFormat ftDay = new SimpleDateFormat("dd");
@@ -149,11 +172,26 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 
     }
 
+
+    /**
+     * 获取所有的OneList列表,如果这块在之前加载好就好了
+     */
+    private void  getOneList(){
+        for(String id: idList.getData()){
+            presenter.getOneList(id, channel, version, uuid, platform,false); //这块如果是前面加载好的话就不用写这个重载了
+        }
+    }
+    public void getDayList(OneList oneList){
+        DayList day=new DayList();
+        day.setId(oneList.getData().getId());
+        day.setDate(oneList.getData().getDate());
+        day.setImg_url(oneList.getData().getContent_list().get(0).getImg_url());
+        dayList.add(day);
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
-
 
 }

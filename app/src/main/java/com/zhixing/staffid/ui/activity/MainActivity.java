@@ -125,7 +125,6 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.destroy();
     }
 
 }

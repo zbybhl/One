@@ -12,7 +12,8 @@
         android:minHeight="?attr/actionBarSize"
         android:fitsSystemWindows="true"
         app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp">
+        app:contentInsetStart="0dp"
+        android:background="@drawable/shape_cardview_border">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -62,8 +63,7 @@
         android:id="@+id/fragmnet_select_date"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
     </FrameLayout>
 
 </LinearLayout>

@@ -85,7 +85,34 @@ public class OnePresenter extends MvpPresenter<OneFragment> {
 
         );
     }
+    public void getOneList(String data, String channel, String version, String uuid, String platform,boolean isFirst){
+        compositeSubscription.add(dataManager.getOneList(data, channel, version, uuid, platform)//将请求封装成的observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<OneList>() {
+                    @Override
+                    public void onCompleted() {
+                        if (oneListBody != null){
+                            getView().getDayList(oneListBody);
+                        }
+                        AppLog.d("Completed!");
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        AppLog.d("Error!");
+                    }
+
+                    @Override
+                    public void onNext(OneList oneList) {
+                        oneListBody = oneList;
+                        AppLog.d("Item: " +oneList);
+                    }
+                })
+
+        );
+    }
     @Override
     public void destroy(){
         if (compositeSubscription.hasSubscriptions()){

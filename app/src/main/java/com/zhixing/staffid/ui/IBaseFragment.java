@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 /**
  * created by zhaobiying
@@ -17,16 +18,19 @@ import butterknife.ButterKnife;
  */
 public abstract class IBaseFragment extends Fragment {
     @Nullable
-    @Override
+    private View view;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         int layoutRes = getFragmentLayout();
-        return inflater.inflate(layoutRes, container, false);
+
+        view = inflater.inflate(layoutRes, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
     }
+
 
     protected ActionBar getSupportActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -38,15 +42,18 @@ public abstract class IBaseFragment extends Fragment {
             actionBar.setTitle(resId);
         }
     }
-
-    protected void setTitle(String title) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(title);
-        }
-    }
     /**
      * 每个Fragment自己的布局
      */
     protected abstract int getFragmentLayout();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

@@ -10,6 +10,7 @@ import com.zhixing.staffid.ui.presenter.AllPresenter;
  * on 2018/4/12
  */
 public class AllFragment extends MvpFragment<AllPresenter> {
+
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_all;
