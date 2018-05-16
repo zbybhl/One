@@ -56,5 +56,6 @@ dependencies {
     annotationProcessor 'com.ryanharter.auto.value:auto-value-gson:0.4.5'
     // test
     testCompile 'junit:junit:4.12'
+    compile project(':pulltorefresh')
 
 }

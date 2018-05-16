@@ -1,1 +1,1 @@
-include ':app', ':mygreendaogenerator'
+include ':app', ':mygreendaogenerator', ':pulltorefresh'

@@ -8,14 +8,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.zhixing.staffid.R;
 import com.zhixing.staffid.constants.NumberToMonth;
 import com.zhixing.staffid.network.bean.IdList;
 import com.zhixing.staffid.network.bean.OneList;
 import com.zhixing.staffid.ui.MvpFragment;
 import com.zhixing.staffid.ui.pojo.DayList;
+import com.zhixing.staffid.ui.pojo.PhotographInfo;
 import com.zhixing.staffid.ui.presenter.OnePresenter;
 import com.zhixing.staffid.util.PermissionsActivity;
 import com.zhixing.staffid.util.PermissionsChecker;
@@ -51,6 +54,15 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     Toolbar oneToolbar;
     @Bind(R.id.monthAndYearTextView)
     SmallCornerView monthAndYearTextView;
+    @Bind(R.id.photographImageView)
+    ImageView photographImageView;
+    @Bind(R.id.pic_infoTextView)
+    TextView pic_infoTextView;
+    @Bind(R.id.contentTextView)
+    TextView contentTextView;
+    @Bind(R.id.words_infoTextView)
+    TextView words_infoTextView;
+//    @Bind(R.id.main_ptfv)
 
 
     private PermissionsChecker mPermissionsChecker; // 权限检测器
@@ -90,21 +102,19 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 
     }
 
-    @OnClick(R.id.monthAndYearTextView)
+    @OnClick(R.id.one_toolbar)
     public void onViewClicked() {
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         if(monthAndYearTextView.getOrientation()==0) {
             monthAndYearTextView.setOrientation(1);
-            transaction.add(R.id.fragmnet_select_date, DateListFragmnet.getInstance());
-            DateListFragmnet.getInstance().setDayLists(dayList);
+            transaction.add(R.id.fragment_select_date, DateListFragment.getInstance());
+            DateListFragment.getInstance().setDayLists(dayList);
             transaction.commitAllowingStateLoss();
-
-
         }
         else {
             monthAndYearTextView.setOrientation(0);
-            transaction.remove(DateListFragmnet.getInstance())
+            transaction.remove(DateListFragment.getInstance())
                     .commitAllowingStateLoss();
         }
     }
@@ -145,6 +155,23 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         cityAndWeather.setText(oneList.getData().getWeather().getCity_name() + "·" +
                 oneList.getData().getWeather().getClimate() +
                 oneList.getData().getWeather().getTemperature() + "℃");
+
+        PhotographInfo photographInfo = new PhotographInfo();
+        photographInfo.setId(oneList.getData().getContent_list().get(0).getId());
+        photographInfo.setContent(oneList.getData().getContent_list().get(0).getShare_info().getContent());
+        photographInfo.setPic_info(oneList.getData().getContent_list().get(0).getPic_info());
+        photographInfo.setImg_url(oneList.getData().getContent_list().get(0).getImg_url());
+        photographInfo.setWords_info(oneList.getData().getContent_list().get(0).getWords_info());
+
+        Glide
+                .with(mvpActivity)
+                .load(photographInfo.getImg_url())
+//                .placeholder(R.mipmap.ic_preloading)
+                .crossFade()
+                .into(photographImageView);
+        pic_infoTextView.setText(" " + photographInfo.getPic_info());
+        contentTextView.setText(photographInfo.getContent());
+        words_infoTextView.setText(photographInfo.getWords_info());
     }
 
     @Override

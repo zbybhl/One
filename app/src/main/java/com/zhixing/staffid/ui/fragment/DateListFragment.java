@@ -5,9 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.zhixing.staffid.R;
 import com.zhixing.staffid.adapter.OnedayAdapter;
@@ -17,17 +15,16 @@ import com.zhixing.staffid.ui.pojo.DayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 
 /**
  * created by zhaobiying
  * on 2018/4/28
  */
-public class DateListFragmnet extends IBaseFragment {
+public class DateListFragment extends IBaseFragment {
 
 
-    private static DateListFragmnet instance;
+    private static DateListFragment instance;
     @Bind(R.id.reyc_selectdate)
     RecyclerView reycSelectdate;
 
@@ -35,9 +32,9 @@ public class DateListFragmnet extends IBaseFragment {
     private List<DayList> dayLists;
 
 
-    public static synchronized DateListFragmnet getInstance() {
+    public static synchronized DateListFragment getInstance() {
         if (instance == null) {
-            instance = new DateListFragmnet();
+            instance = new DateListFragment();
         }
         return instance;
     }
