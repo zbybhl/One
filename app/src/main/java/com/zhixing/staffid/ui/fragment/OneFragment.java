@@ -2,6 +2,7 @@ package com.zhixing.staffid.ui.fragment;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -9,9 +10,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.zhixing.staffid.R;
 import com.zhixing.staffid.constants.NumberToMonth;
 import com.zhixing.staffid.network.bean.IdList;
@@ -62,8 +68,8 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     TextView contentTextView;
     @Bind(R.id.words_infoTextView)
     TextView words_infoTextView;
-//    @Bind(R.id.main_ptfv)
-
+    @Bind(R.id.main_ptfv)
+    PullToRefreshScrollView pullToRefreshScrollView;
 
     private PermissionsChecker mPermissionsChecker; // 权限检测器
 
@@ -75,18 +81,29 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 
     private String oneListID;
     private IdList idList;
-    private List<DayList> dayList=new ArrayList<DayList>();
+    private List<DayList> dayList=new ArrayList<>();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPermissionsChecker = new PermissionsChecker(mvpActivity);
     }
 
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mvpActivity.setSupportActionBar(oneToolbar);
+        //上拉、下拉设定
+        pullToRefreshScrollView.setMode(Mode.PULL_FROM_START);
+
+        //上拉监听函数
+        pullToRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+            @Override
+            public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                //执行刷新函数
+                new GetDataTask().execute();
+            }
+        });
     }
 
 
@@ -118,6 +135,31 @@ public class OneFragment extends MvpFragment<OnePresenter> {
                     .commitAllowingStateLoss();
         }
     }
+
+    private class GetDataTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                Thread.sleep(2000);
+                presenter.getIdList(channel, version, uuid, platform);
+                return " ";
+            } catch (InterruptedException e) {
+                Log.e("msg","GetDataTask:" + e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            pullToRefreshScrollView.setMode(Mode.PULL_FROM_START);
+
+            pullToRefreshScrollView.onRefreshComplete();
+            super.onPostExecute(s);
+        }
+    }
+
 
     private void startPermissionsActivity() {
         PermissionsActivity.startActivityForResult(mvpActivity, REQUEST_CODE, PERMISSIONS);
