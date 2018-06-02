@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -17,7 +19,6 @@ import com.bumptech.glide.Glide;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.zhixing.staffid.R;
 import com.zhixing.staffid.constants.NumberToMonth;
 import com.zhixing.staffid.network.bean.IdList;
@@ -26,6 +27,7 @@ import com.zhixing.staffid.ui.MvpFragment;
 import com.zhixing.staffid.ui.pojo.DayList;
 import com.zhixing.staffid.ui.pojo.PhotographInfo;
 import com.zhixing.staffid.ui.presenter.OnePresenter;
+import com.zhixing.staffid.util.AppLog;
 import com.zhixing.staffid.util.PermissionsActivity;
 import com.zhixing.staffid.util.PermissionsChecker;
 import com.zhixing.staffid.util.SystemUtil;
@@ -70,6 +72,8 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     TextView words_infoTextView;
     @Bind(R.id.main_ptfv)
     PullToRefreshScrollView pullToRefreshScrollView;
+    @Bind(R.id.imageView)
+    ImageView imageView;
 
     private PermissionsChecker mPermissionsChecker; // 权限检测器
 
@@ -81,7 +85,10 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 
     private String oneListID;
     private IdList idList;
-    private List<DayList> dayList=new ArrayList<>();
+    private List<DayList> dayList = new ArrayList<>();
+    private Boolean isBottomShow = true;
+    private HideFooterCallBack footerCallback;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,14 +103,42 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         pullToRefreshScrollView.setMode(Mode.PULL_FROM_START);
 
         //上拉监听函数
-        pullToRefreshScrollView.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
-
+        pullToRefreshScrollView.getRefreshableView().setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
-            public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                //执行刷新函数
-                new GetDataTask().execute();
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                //下滑,显示
+                if (i1-i3< 0 && i1<=0 && !isBottomShow) {
+
+                    footerCallback.show();
+                    isBottomShow = true;
+
+
+                }
+                //上滑,隐藏
+                else if (i1-i3> 0 && isBottomShow) {
+
+                    footerCallback.hide();
+                    isBottomShow = false;
+                }
             }
         });
+        pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                //执行刷新函数
+                new GetDataTask().execute();
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+
+            }
+
+
+        });
+
     }
 
 
@@ -123,17 +158,24 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     public void onViewClicked() {
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        if(monthAndYearTextView.getOrientation()==0) {
+        if (monthAndYearTextView.getOrientation() == 0) {
             monthAndYearTextView.setOrientation(1);
             transaction.add(R.id.fragment_select_date, DateListFragment.getInstance());
             DateListFragment.getInstance().setDayLists(dayList);
             transaction.commitAllowingStateLoss();
-        }
-        else {
+        } else {
             monthAndYearTextView.setOrientation(0);
             transaction.remove(DateListFragment.getInstance())
                     .commitAllowingStateLoss();
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 
     private class GetDataTask extends AsyncTask<Void, Void, String> {
@@ -145,7 +187,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
                 presenter.getIdList(channel, version, uuid, platform);
                 return " ";
             } catch (InterruptedException e) {
-                Log.e("msg","GetDataTask:" + e.getMessage());
+                Log.e("msg", "GetDataTask:" + e.getMessage());
             }
             return null;
         }
@@ -178,7 +220,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
      * @param idList presenter返回的Idlist列表
      */
     public void selectId(IdList idList) {
-        this.idList=idList;
+        this.idList = idList;
         oneListID = idList.getData().get(0);
         presenter.getOneList(oneListID, channel, version, uuid, platform);
         getOneList();
@@ -211,6 +253,12 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 //                .placeholder(R.mipmap.ic_preloading)
                 .crossFade()
                 .into(photographImageView);
+        Glide
+                .with(mvpActivity)
+                .load(photographInfo.getImg_url())
+//                .placeholder(R.mipmap.ic_preloading)
+                .crossFade()
+                .into(imageView);
         pic_infoTextView.setText(" " + photographInfo.getPic_info());
         contentTextView.setText(photographInfo.getContent());
         words_infoTextView.setText(photographInfo.getWords_info());
@@ -242,25 +290,37 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     }
 
 
+    public void hideFooterCallBack(HideFooterCallBack hideFooterCallBack) {
+        this.footerCallback = hideFooterCallBack;
+    }
+
     /**
      * 获取所有的OneList列表,如果这块在之前加载好就好了
      */
-    private void  getOneList(){
-        for(String id: idList.getData()){
-            presenter.getOneList(id, channel, version, uuid, platform,false); //这块如果是前面加载好的话就不用写这个重载了
+    private void getOneList() {
+        for (String id : idList.getData()) {
+            presenter.getOneList(id, channel, version, uuid, platform, false); //这块如果是前面加载好的话就不用写这个重载了
         }
     }
-    public void getDayList(OneList oneList){
-        DayList day=new DayList();
+
+    public void getDayList(OneList oneList) {
+        DayList day = new DayList();
         day.setId(oneList.getData().getId());
         day.setDate(oneList.getData().getDate());
         day.setImg_url(oneList.getData().getContent_list().get(0).getImg_url());
         dayList.add(day);
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
 
+    public interface HideFooterCallBack {
+        void hide();
+
+        void show();
+
+    }
 }

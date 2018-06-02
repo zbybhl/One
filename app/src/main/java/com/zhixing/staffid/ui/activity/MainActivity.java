@@ -3,9 +3,11 @@ package com.zhixing.staffid.ui.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -15,13 +17,13 @@ import com.zhixing.staffid.ui.fragment.AllFragment;
 import com.zhixing.staffid.ui.fragment.MeFragment;
 import com.zhixing.staffid.ui.fragment.OneFragment;
 import com.zhixing.staffid.ui.presenter.MainPresenter;
+import com.zhixing.staffid.util.BottomNavigationViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 public class MainActivity extends BaseMvpActivity<MainPresenter> {
@@ -50,6 +52,7 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
     }
 
     private void initView() {
+
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
         fragments = new ArrayList<>();
@@ -64,6 +67,7 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
         transaction.add(R.id.home_container, mAllFragment);
         transaction.add(R.id.home_container, mMeFragment);
 
+        BottomNavigationViewHelper.disableShiftMode(bottomTabLayout);
         bottomTabLayout.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -90,6 +94,24 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
     void updateFragment() {
         transaction.show(mOneFragment).hide(mAllFragment).hide(mMeFragment);
         transaction.commit();
+        currentFragment=mOneFragment;
+        if(currentFragment instanceof OneFragment) {
+            ((OneFragment) currentFragment).hideFooterCallBack(new OneFragment.HideFooterCallBack() {
+                @Override
+                public void hide() {
+                    bottomTabLayout.animate().translationY(bottomTabLayout.getHeight());
+
+                }
+
+                @Override
+                public void show() {
+                    bottomTabLayout.animate().translationY(0);
+
+                }
+            });
+//            View view=currentFragment.getView();
+//            PullToRefreshScrollView pullToRefreshScrollView= (PullToRefreshScrollView)view.findViewById(R.id.main_ptfv);
+        }
     }
 
     private void switchFragment(int index) {
@@ -98,11 +120,13 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
         for (int i = 0; i < fragments.size(); i++) {
             if (index == i) {
                 transaction.show(fragments.get(index));
+
             } else {
                 transaction.hide(fragments.get(i));
             }
         }
         transaction.commit();
+
     }
 
 
@@ -113,7 +137,8 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
 
     @Override
     public void hideLoading() {
-        super.hideLoading();
+
+
     }
 
     @Override
@@ -126,5 +151,6 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
     protected void onDestroy() {
         super.onDestroy();
     }
+
 
 }

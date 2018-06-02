@@ -23,6 +23,7 @@ public abstract class MvpFragment<P extends MvpPresenter> extends IBaseFragment 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mvpActivity = (BaseMvpActivity) getActivity();
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
