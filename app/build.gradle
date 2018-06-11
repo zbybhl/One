@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.zhixing.staffid"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -33,7 +33,6 @@ dependencies {
     compile "com.android.support:design:${extSupportVersion}"
     compile "com.android.support:appcompat-v7:${extSupportVersion}"
     compile "com.android.support:cardview-v7:${extSupportVersion}"
-    // ????????
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -41,7 +40,7 @@ dependencies {
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'org.greenrobot:greendao-generator:3.2.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:retrofit:2. 0.2'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.1'
@@ -57,5 +56,5 @@ dependencies {
     // test
     testCompile 'junit:junit:4.12'
     compile project(':pulltorefresh')
-
+    compile project(':library')
 }

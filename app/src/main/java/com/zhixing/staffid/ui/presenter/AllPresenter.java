@@ -7,4 +7,9 @@ import com.zhixing.staffid.ui.fragment.AllFragment;
  * on 2018/4/21
  */
 public class AllPresenter  extends MvpPresenter<AllFragment>{
+
+    @Override
+    public void setView(AllFragment view) {
+        super.setView(view);
+    }
 }

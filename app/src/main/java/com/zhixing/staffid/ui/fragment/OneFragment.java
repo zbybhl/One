@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.zhixing.staffid.R;
+import com.zhixing.staffid.constants.Constants;
 import com.zhixing.staffid.constants.NumberToMonth;
 import com.zhixing.staffid.network.bean.IdList;
 import com.zhixing.staffid.network.bean.OneList;
@@ -27,7 +29,6 @@ import com.zhixing.staffid.ui.MvpFragment;
 import com.zhixing.staffid.ui.pojo.DayList;
 import com.zhixing.staffid.ui.pojo.PhotographInfo;
 import com.zhixing.staffid.ui.presenter.OnePresenter;
-import com.zhixing.staffid.util.AppLog;
 import com.zhixing.staffid.util.PermissionsActivity;
 import com.zhixing.staffid.util.PermissionsChecker;
 import com.zhixing.staffid.util.SystemUtil;
@@ -72,8 +73,14 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     TextView words_infoTextView;
     @Bind(R.id.main_ptfv)
     PullToRefreshScrollView pullToRefreshScrollView;
-    @Bind(R.id.imageView)
-    ImageView imageView;
+    @Bind(R.id.tv_thumnail_list)
+    TextView tvThumnailList;
+    @Bind(R.id.iv_archor)
+    ImageView ivArchor;
+    @Bind(R.id.llyt_thumnail_list)
+    LinearLayout llytThumnailList;
+    @Bind(R.id.llyt_thumnail_content)
+    LinearLayout llytThumnailContent;
 
     private PermissionsChecker mPermissionsChecker; // 权限检测器
 
@@ -88,6 +95,9 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     private List<DayList> dayList = new ArrayList<>();
     private Boolean isBottomShow = true;
     private HideFooterCallBack footerCallback;
+    private volatile Boolean isShow = false;
+    private List<OneList.Data.Content_list> contentLists = new ArrayList<>();//TODO 应该先都先在数据库里
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,7 +117,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
             @Override
             public void onScrollChange(View view, int i, int i1, int i2, int i3) {
                 //下滑,显示
-                if (i1-i3< 0 && i1<=0 && !isBottomShow) {
+                if (i1 - i3 < 0 && i1 <= 0 && !isBottomShow) {
 
                     footerCallback.show();
                     isBottomShow = true;
@@ -115,7 +125,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 
                 }
                 //上滑,隐藏
-                else if (i1-i3> 0 && isBottomShow) {
+                else if (i1 - i3 > 0 && isBottomShow) {
 
                     footerCallback.hide();
                     isBottomShow = false;
@@ -172,10 +182,32 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
         return rootView;
+    }
+
+    @OnClick(R.id.llyt_thumnail_list)
+    public void onThumnailClicked() {
+        if (!isShow) {
+            ivArchor.setImageResource(R.drawable.arrow_up_black_18);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            for(int i=1;i<contentLists.size();i++){
+                View view = inflater.inflate(R.layout.item_onelist_thumnail, null);
+                TextView textTitle=(TextView)view.findViewById(R.id.tv_title);
+                TextView textTitleContent=(TextView)view.findViewById(R.id.tv_title_content);
+                textTitle.setText(Constants.titleList[i-1].toString());
+                textTitleContent.setText(contentLists.get(i).getTitle());
+                llytThumnailContent.addView(view);
+                //TODO 复用view未写
+            }
+            isShow = true;
+        } else {
+            ivArchor.setImageResource(R.drawable.arrow_down_black_18);
+            llytThumnailContent.removeAllViews();
+            isShow = false;
+        }
     }
 
     private class GetDataTask extends AsyncTask<Void, Void, String> {
@@ -230,6 +262,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
      * @param oneList presenter返回的OneList列表
      */
     public void showOneList(OneList oneList) {
+        contentLists=oneList.getData().getContent_list();
         Date date = oneList.getData().getWeather().getDate();
         SimpleDateFormat ftDay = new SimpleDateFormat("dd");
         dayTextView.setText(ftDay.format(date));
@@ -241,11 +274,11 @@ public class OneFragment extends MvpFragment<OnePresenter> {
                 oneList.getData().getWeather().getTemperature() + "℃");
 
         PhotographInfo photographInfo = new PhotographInfo();
-        photographInfo.setId(oneList.getData().getContent_list().get(0).getId());
-        photographInfo.setContent(oneList.getData().getContent_list().get(0).getShare_info().getContent());
-        photographInfo.setPic_info(oneList.getData().getContent_list().get(0).getPic_info());
-        photographInfo.setImg_url(oneList.getData().getContent_list().get(0).getImg_url());
-        photographInfo.setWords_info(oneList.getData().getContent_list().get(0).getWords_info());
+        photographInfo.setId(contentLists.get(0).getId());
+        photographInfo.setContent(contentLists.get(0).getShare_info().getContent());
+        photographInfo.setPic_info(contentLists.get(0).getPic_info());
+        photographInfo.setImg_url(contentLists.get(0).getImg_url());
+        photographInfo.setWords_info(contentLists.get(0).getWords_info());
 
         Glide
                 .with(mvpActivity)
@@ -253,12 +286,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 //                .placeholder(R.mipmap.ic_preloading)
                 .crossFade()
                 .into(photographImageView);
-        Glide
-                .with(mvpActivity)
-                .load(photographInfo.getImg_url())
-//                .placeholder(R.mipmap.ic_preloading)
-                .crossFade()
-                .into(imageView);
+
         pic_infoTextView.setText(" " + photographInfo.getPic_info());
         contentTextView.setText(photographInfo.getContent());
         words_infoTextView.setText(photographInfo.getWords_info());
