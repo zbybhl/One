@@ -16,23 +16,35 @@ public class MyGreendaoGenerator  {
 
         Schema schema = new Schema(1, "com.zhixing.staffid.entity");
         schema.setDefaultJavaPackageDao("com.zhixing.staffid.dao");
+        addContent(schema);
         addNote(schema);
-
         new DaoGenerator().generateAll(schema,"./app/src/main/java/");
     }
     private static void addNote(Schema schema) {
-        // Ò»¸öÊµÌå£¨Àà£©¾Í¹ØÁªµ½Êı¾İ¿âÖĞµÄÒ»ÕÅ±í£¬´Ë´¦±íÃûÎª¡¸Note¡¹£¨¼ÈÀàÃû£©
+        // ä¸€ä¸ªå®ä½“ï¼ˆç±»ï¼‰å°±å…³è”åˆ°æ•°æ®åº“ä¸­çš„ä¸€å¼ è¡¨ï¼Œæ­¤å¤„è¡¨åä¸ºã€ŒNoteã€ï¼ˆæ—¢ç±»åï¼‰
         Entity note = schema.addEntity("Note");
-        // ÄãÒ²¿ÉÒÔÖØĞÂ¸ø±íÃüÃû
+        // ä½ ä¹Ÿå¯ä»¥é‡æ–°ç»™è¡¨å‘½å
         // note.setTableName("NODE");
 
-        // greenDAO »á×Ô¶¯¸ù¾İÊµÌåÀàµÄÊôĞÔÖµÀ´´´½¨±í×Ö¶Î£¬²¢¸³ÓèÄ¬ÈÏÖµ
-        // ½ÓÏÂÀ´Äã±ã¿ÉÒÔÉèÖÃ±íÖĞµÄ×Ö¶Î£º
+        // greenDAO ä¼šè‡ªåŠ¨æ ¹æ®å®ä½“ç±»çš„å±æ€§å€¼æ¥åˆ›å»ºè¡¨å­—æ®µï¼Œå¹¶èµ‹äºˆé»˜è®¤å€¼
+        // æ¥ä¸‹æ¥ä½ ä¾¿å¯ä»¥è®¾ç½®è¡¨ä¸­çš„å­—æ®µï¼š
         note.addIdProperty();
         note.addStringProperty("text").notNull();
-        // ÓëÔÚ Java ÖĞÊ¹ÓÃÍÕ·åÃüÃû·¨²»Í¬£¬Ä¬ÈÏÊı¾İ¿âÖĞµÄÃüÃûÊÇÊ¹ÓÃ´óĞ´ºÍÏÂ»®ÏßÀ´·Ö¸îµ¥´ÊµÄ¡£
-        // For example, a property called ¡°creationDate¡± will become a database column ¡°CREATION_DATE¡±.
+        // ä¸åœ¨ Java ä¸­ä½¿ç”¨é©¼å³°å‘½åæ³•ä¸åŒï¼Œé»˜è®¤æ•°æ®åº“ä¸­çš„å‘½åæ˜¯ä½¿ç”¨å¤§å†™å’Œä¸‹åˆ’çº¿æ¥åˆ†å‰²å•è¯çš„ã€‚
+        // For example, a property called â€œcreationDateâ€ will become a database column â€œCREATION_DATEâ€.
         note.addStringProperty("comment");
         note.addDateProperty("date");
+    }
+    private static void addContent(Schema schema) {
+        Entity content = schema.addEntity("Content");
+        content.addIdProperty();
+        content.addStringProperty("item_id").notNull();
+        content.addIntProperty("category");
+        content.addStringProperty("title");
+        content.addStringProperty("img_url");
+        content.addStringProperty("pic_info");
+        content.addStringProperty("words_info");
+        content.addStringProperty("subtitle");
+        content.addDateProperty("post_date");
     }
 }

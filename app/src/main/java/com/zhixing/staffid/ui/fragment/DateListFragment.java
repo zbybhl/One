@@ -2,6 +2,8 @@ package com.zhixing.staffid.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +15,6 @@ import com.zhixing.staffid.ui.IBaseFragment;
 import com.zhixing.staffid.ui.pojo.DayList;
 
 import java.util.List;
-
 import butterknife.Bind;
 
 
@@ -28,9 +29,10 @@ public class DateListFragment extends IBaseFragment {
     @Bind(R.id.reyc_selectdate)
     RecyclerView reycSelectdate;
 
+    private BottomNavigationView bottomTabLayout;
 
     private List<DayList> dayLists;
-
+    private FragmentTransaction transaction;
 
     public static synchronized DateListFragment getInstance() {
         if (instance == null) {
@@ -59,6 +61,15 @@ public class DateListFragment extends IBaseFragment {
         OnedayAdapter adapter = new OnedayAdapter(getParentFragment().getActivity(), dayLists);
         reycSelectdate.setAdapter(adapter);        //和gridview一样直接setAdapter
         reycSelectdate.setLayoutManager(new GridLayoutManager(getParentFragment().getActivity(), 2,LinearLayoutManager.VERTICAL,false)); //这里是设置为网格布局
+        adapter.setOnItemClickListener(new OnedayAdapter.OnItemClickListener(){
+            @Override
+            public void onItemClick(View view, int position) {
+              getParentFragment().getChildFragmentManager().beginTransaction().hide(instance).commitAllowingStateLoss();
+              ((OneFragment)getParentFragment()).updateView(dayLists.get(position).getId());
+
+
+            }
+        });
     }
 
     @Override

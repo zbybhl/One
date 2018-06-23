@@ -1,6 +1,7 @@
 package com.zhixing.staffid.adapter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import java.util.List;
 public class OnedayAdapter extends RecyclerView.Adapter<OnedayAdapter.ViewHolder>{
     private List<DayList> mData;
     private Context mContext;
+    private OnItemClickListener mOnItemClickListener = null;
 
     public OnedayAdapter(Context context,List<DayList> data) {
         this.mData = data;
@@ -48,6 +50,17 @@ public class OnedayAdapter extends RecyclerView.Adapter<OnedayAdapter.ViewHolder
                 .into(holder.mImageView);
 //        String date = DateUtil.DateToString(mData.get(position).getDate(), DateStyle.YYYY_MM_DD_EN);
         holder.mTextView.setText(mData.get(position).getDate().split(" ")[0]);
+        holder.mLinearLayout.setTag(position);
+        holder.mLinearLayout.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                if (mOnItemClickListener != null) {
+                    //注意这里使用getTag方法获取position
+                    mOnItemClickListener.onItemClick(view,(int)view.getTag());
+                }
+            }
+        });
     }
 
     @Override
@@ -67,5 +80,13 @@ public class OnedayAdapter extends RecyclerView.Adapter<OnedayAdapter.ViewHolder
             mImageView=(ImageView) v.findViewById(R.id.iv_theme);
         }
     }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
+    }
 
+
+    //define interface
+    public static interface OnItemClickListener {
+        void onItemClick(View view , int position);
+    }
 }

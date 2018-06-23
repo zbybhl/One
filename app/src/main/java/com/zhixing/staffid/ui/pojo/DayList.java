@@ -1,5 +1,7 @@
 package com.zhixing.staffid.ui.pojo;
 
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 
 /**
@@ -7,7 +9,7 @@ import java.util.Date;
  * on 2018/4/28
  * 用于日期列表的bean类
  */
-public class DayList {
+public class DayList  implements Comparable<DayList>{
 
     private String id;
     private String img_url;
@@ -36,4 +38,13 @@ public class DayList {
         this.date = date;
     }
 
+    @Override
+    public int compareTo(@NonNull DayList dayList) {
+
+        if(date.compareTo(dayList.date)>0)
+            return -1;
+        if(date.compareTo(dayList.date)<0)
+            return 1;
+        return 0;
+    }
 }

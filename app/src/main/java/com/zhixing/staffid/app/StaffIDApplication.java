@@ -39,6 +39,7 @@ public class StaffIDApplication extends Application {
         db = openHelper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
+
     }
 
     public DaoSession getSession() {

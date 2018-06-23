@@ -21,14 +21,18 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.zhixing.staffid.R;
+import com.zhixing.staffid.app.StaffIDApplication;
 import com.zhixing.staffid.constants.Constants;
 import com.zhixing.staffid.constants.NumberToMonth;
+import com.zhixing.staffid.dao.ContentDao;
+import com.zhixing.staffid.entity.Content;
 import com.zhixing.staffid.network.bean.IdList;
 import com.zhixing.staffid.network.bean.OneList;
 import com.zhixing.staffid.ui.MvpFragment;
 import com.zhixing.staffid.ui.pojo.DayList;
 import com.zhixing.staffid.ui.pojo.PhotographInfo;
 import com.zhixing.staffid.ui.presenter.OnePresenter;
+import com.zhixing.staffid.util.DateUtil;
 import com.zhixing.staffid.util.PermissionsActivity;
 import com.zhixing.staffid.util.PermissionsChecker;
 import com.zhixing.staffid.util.SystemUtil;
@@ -36,8 +40,12 @@ import com.zhixing.staffid.widget.SmallCornerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -83,8 +91,6 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     LinearLayout llytThumnailContent;
 
     private PermissionsChecker mPermissionsChecker; // 权限检测器
-
-
     private String channel;
     private String version;
     private String uuid;
@@ -98,6 +104,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     private volatile Boolean isShow = false;
     private List<OneList.Data.Content_list> contentLists = new ArrayList<>();//TODO 应该先都先在数据库里
 
+    private  Boolean isAddFragmnet=false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,7 +145,6 @@ public class OneFragment extends MvpFragment<OnePresenter> {
             public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 //执行刷新函数
                 new GetDataTask().execute();
-
             }
 
             @Override
@@ -146,15 +152,24 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 
             }
 
-
         });
 
     }
 
+    public void updateView(String id){
+        this.oneListID=id;
+        this.onResume();
+    }
 
     @Override
     public void onResume() {
         super.onResume();
+        monthAndYearTextView.setOrientation(0);
+        dayList.clear();
+        isShow = false;
+        isBottomShow = true;
+        idList=null;
+
         // 缺少权限时, 进入权限配置页面
         if (mPermissionsChecker.lacksPermissions(PERMISSIONS)) {
             startPermissionsActivity();
@@ -166,18 +181,24 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 
     @OnClick(R.id.one_toolbar)
     public void onViewClicked() {
-
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        if (monthAndYearTextView.getOrientation() == 0) {
-            monthAndYearTextView.setOrientation(1);
+        FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
+        if(!isAddFragmnet) {
             transaction.add(R.id.fragment_select_date, DateListFragment.getInstance());
-            DateListFragment.getInstance().setDayLists(dayList);
-            transaction.commitAllowingStateLoss();
-        } else {
-            monthAndYearTextView.setOrientation(0);
-            transaction.remove(DateListFragment.getInstance())
-                    .commitAllowingStateLoss();
+            isAddFragmnet=true;
         }
+        if (monthAndYearTextView.getOrientation() == 0) {
+            transaction.show(DateListFragment.getInstance());
+            monthAndYearTextView.setOrientation(1);
+            Collections.sort(dayList);
+            DateListFragment.getInstance().setDayLists(dayList);
+            footerCallback.hide();
+        }
+        else {
+            monthAndYearTextView.setOrientation(0);
+            transaction.hide(DateListFragment.getInstance());
+            footerCallback.show();
+        }
+        transaction.commitAllowingStateLoss();
     }
 
     @Override
@@ -192,12 +213,11 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         if (!isShow) {
             ivArchor.setImageResource(R.drawable.arrow_up_black_18);
             LayoutInflater inflater = getActivity().getLayoutInflater();
-
             for(int i=1;i<contentLists.size();i++){
                 View view = inflater.inflate(R.layout.item_onelist_thumnail, null);
                 TextView textTitle=(TextView)view.findViewById(R.id.tv_title);
                 TextView textTitleContent=(TextView)view.findViewById(R.id.tv_title_content);
-                textTitle.setText(Constants.titleList[i-1].toString());
+                textTitle.setText(Constants.titleList[Integer.parseInt(contentLists.get(i).getCategory())-1].toString());
                 textTitleContent.setText(contentLists.get(i).getTitle());
                 llytThumnailContent.addView(view);
                 //TODO 复用view未写
@@ -228,7 +248,6 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         protected void onPostExecute(String s) {
 
             pullToRefreshScrollView.setMode(Mode.PULL_FROM_START);
-
             pullToRefreshScrollView.onRefreshComplete();
             super.onPostExecute(s);
         }
@@ -253,7 +272,9 @@ public class OneFragment extends MvpFragment<OnePresenter> {
      */
     public void selectId(IdList idList) {
         this.idList = idList;
-        oneListID = idList.getData().get(0);
+        if(oneListID==null)
+            oneListID = idList.getData().get(0);
+
         presenter.getOneList(oneListID, channel, version, uuid, platform);
         getOneList();
     }
@@ -262,12 +283,14 @@ public class OneFragment extends MvpFragment<OnePresenter> {
      * @param oneList presenter返回的OneList列表
      */
     public void showOneList(OneList oneList) {
+        //TODO 应该写到application做线程拉取
         contentLists=oneList.getData().getContent_list();
-        Date date = oneList.getData().getWeather().getDate();
+        Date date = DateUtil.StringToDate(oneList.getData().getDate());
         SimpleDateFormat ftDay = new SimpleDateFormat("dd");
         dayTextView.setText(ftDay.format(date));
         SimpleDateFormat ftMonth = new SimpleDateFormat("MM");
         SimpleDateFormat ftYear = new SimpleDateFormat("yyyy");
+
         monthAndYearTextView.setText(NumberToMonth.numberAndMonth.get(ftMonth.format(date)) + ftYear.format(date));
         cityAndWeather.setText(oneList.getData().getWeather().getCity_name() + "·" +
                 oneList.getData().getWeather().getClimate() +
@@ -290,6 +313,28 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         pic_infoTextView.setText(" " + photographInfo.getPic_info());
         contentTextView.setText(photographInfo.getContent());
         words_infoTextView.setText(photographInfo.getWords_info());
+        final ContentDao contentdao= StaffIDApplication.getDbInstance().getSession().getContentDao();
+
+        //TODO 存储contentlist到数据库，线程池中运行
+        Runnable saveContentlist= new Runnable(){
+            @Override
+            public void run() {
+                for(int i=0;i<contentLists.size();i++){
+                    Content content=new Content();
+                    content.setItem_id(contentLists.get(i).getItem_id());
+                    content.setCategory(Integer.parseInt(contentLists.get(i).getCategory()));
+                    content.setTitle(contentLists.get(i).getTitle());
+                    content.setImg_url(contentLists.get(i).getImg_url());
+                    content.setPic_info(contentLists.get(i).getPic_info());
+                    content.setWords_info(contentLists.get(i).getWords_info());
+                    content.setSubtitle(contentLists.get(i).getSubtitle());
+                    content.setPost_date(DateUtil.StringToDate(contentLists.get(i).getPost_date()));
+                    contentdao.insert(content);
+                }
+            }
+        };
+        ExecutorService fixThreadPool = Executors.newFixedThreadPool(2);
+        fixThreadPool.execute(saveContentlist);
     }
 
     @Override
@@ -347,7 +392,6 @@ public class OneFragment extends MvpFragment<OnePresenter> {
 
     public interface HideFooterCallBack {
         void hide();
-
         void show();
 
     }
