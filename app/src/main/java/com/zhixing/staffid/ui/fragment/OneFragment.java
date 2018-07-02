@@ -329,7 +329,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
                     content.setWords_info(contentLists.get(i).getWords_info());
                     content.setSubtitle(contentLists.get(i).getSubtitle());
                     content.setPost_date(DateUtil.StringToDate(contentLists.get(i).getPost_date()));
-                    contentdao.insert(content);
+//                    contentdao.insert(content);
                 }
             }
         };

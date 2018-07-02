@@ -37,6 +37,7 @@ public class StaffIDApplication extends Application {
     private void initDatabase() {
         openHelper = new DaoMaster.DevOpenHelper(this, dbName, null);
         db = openHelper.getWritableDatabase();
+        openHelper.onUpgrade(db, 0, 1);
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
 
