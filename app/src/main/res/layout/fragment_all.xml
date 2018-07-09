@@ -42,8 +42,6 @@
 
         </LinearLayout>
 
-
-
     </android.support.v7.widget.Toolbar >
 
 
@@ -54,20 +52,112 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <cn.lightsky.infiniteindicator.InfiniteIndicator
                 android:id="@+id/infinite_anim_circle"
                 android:layout_width="match_parent"
-                app:indicator_type="indicator_anim_circle"
-                android:layout_height="200dp" />
-        </FrameLayout>
-        <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/mainRecyclerView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:scrollbars="vertical" />-->
+                android:layout_height="200dp"
+                app:indicator_type="indicator_anim_circle">
+
+
+            </cn.lightsky.infiniteindicator.InfiniteIndicator>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/light_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="分类导航" />
+
+                <android.support.v7.widget.GridLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rowCount="2"
+                    app:columnCount="4">
+
+                    <com.zhixing.staffid.widget.AddTextImageView
+                        android:id="@+id/imageButton1"
+                        app:layout_rowWeight="1"
+                        app:layout_columnWeight="1"
+                        app:img_src="@mipmap/b"
+                        app:txt_content="问答"
+                        app:txt_color="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/imageButton2"
+                        app:layout_rowWeight="1"
+                        app:layout_columnWeight="1"
+                        android:cropToPadding="true"
+                        android:src="@mipmap/b"
+                        android:scaleType="centerCrop"/>
+
+                    <ImageView
+                        android:id="@+id/imageButton3"
+                        app:layout_rowWeight="1"
+                        app:layout_columnWeight="2"
+                        app:layout_column="2"
+                        app:layout_columnSpan="2"
+                        android:cropToPadding="true"
+                        android:src="@mipmap/b"
+                        android:scaleType="centerCrop"/>
+
+                    <ImageView
+                        android:id="@+id/imageButton4"
+                        app:layout_rowWeight="1"
+                        app:layout_columnWeight="1"
+                        android:cropToPadding="true"
+                        android:src="@mipmap/b"
+                        android:scaleType="centerCrop"/>
+                    <ImageView
+                        android:id="@+id/imageButton5"
+                        app:layout_rowWeight="1"
+                        app:layout_columnWeight="1"
+                        android:cropToPadding="true"
+                        android:src="@mipmap/b"
+                        android:scaleType="centerCrop"/>
+                    <ImageView
+                        android:id="@+id/imageButton6"
+                        app:layout_rowWeight="1"
+                        app:layout_columnWeight="1"
+                        android:cropToPadding="true"
+                        android:src="@mipmap/b"
+                        android:scaleType="centerCrop"/>
+                    <ImageView
+                        android:id="@+id/imageButton7"
+                        app:layout_rowWeight="1"
+                        app:layout_columnWeight="1"
+                        android:cropToPadding="true"
+                        android:src="@mipmap/b"
+                        android:scaleType="centerCrop"/>
+
+                </android.support.v7.widget.GridLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/light_gray" />
+
+        </LinearLayout>
+
+
+
 
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 </LinearLayout>

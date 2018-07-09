@@ -12,5 +12,16 @@
             <enum name="left" value="1"/>
         </attr>
     </declare-styleable>
+    <declare-styleable name="AddTextImageView">
 
+        <!--文本颜色-->
+        <attr name="txt_color" format="reference"/>
+
+        <!--背景图片-->
+        <attr name="img_src" format="reference"/>
+
+        <!--文本-->
+        <attr name="txt_content" format="string"/>
+
+    </declare-styleable>
 </resources>
