@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/music_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:minHeight="?attr/actionBarSize"
+        android:fitsSystemWindows="true"
+        app:contentInsetStart="0dp"
+        android:background="@drawable/shape_cardview_border">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/arrow_left_black_18"/>
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:text="音乐"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"/>
+
+            <ImageView
+                android:id="@+id/iv_archor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_title"
+                android:layout_centerVertical="true"
+                android:src="@drawable/arrow_down_black"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar >
+
+    <ListView
+        android:id="@+id/listview_music"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:listSelector="@android:color/darker_gray"
+        android:cacheColorHint="@android:color/darker_gray"
+        android:divider="@color/light_gray"
+        android:dividerHeight="2dp"/>
+
+</LinearLayout>

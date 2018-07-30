@@ -8,6 +8,7 @@ import com.zhixing.staffid.network.bean.MovieContent;
 import com.zhixing.staffid.network.bean.MoviePicture;
 import com.zhixing.staffid.network.bean.MusicComment;
 import com.zhixing.staffid.network.bean.MusicContent;
+import com.zhixing.staffid.network.bean.MusicList;
 import com.zhixing.staffid.network.bean.OneList;
 import com.zhixing.staffid.network.bean.OneWeekChineseComment;
 import com.zhixing.staffid.network.bean.OneWeekChineseContent;
@@ -66,7 +67,12 @@ public interface RetrofitService {
                                              @Query("version") String version,
                                              @Query("uuid") String uuid,
                                              @Query("platform") String platform);
-
+    @GET("channel/music/more/0")
+    Observable<MusicList> getMusicList(
+                                             @Query("channel") String channel,
+                                             @Query("version") String version,
+                                             @Query("uuid") String uuid,
+                                             @Query("platform") String platform);
     @GET("music/detail/{item_id}")
     Observable<MusicContent> getMusicContent(@Path("item_id") String item_id,
                                              @Query("channel") String channel,

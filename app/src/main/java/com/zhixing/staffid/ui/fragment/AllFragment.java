@@ -1,5 +1,6 @@
 package com.zhixing.staffid.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -9,20 +10,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.zhixing.staffid.R;
 import com.zhixing.staffid.ui.MvpFragment;
+import com.zhixing.staffid.ui.activity.MusicListActivity;
 import com.zhixing.staffid.ui.presenter.AllPresenter;
 import com.zhixing.staffid.util.GlideLoader;
+import com.zhixing.staffid.widget.AddTextImageView;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.lightsky.infiniteindicator.IndicatorConfiguration;
 import cn.lightsky.infiniteindicator.InfiniteIndicator;
-
 import cn.lightsky.infiniteindicator.Page;
 
 import static cn.lightsky.infiniteindicator.IndicatorConfiguration.LEFT;
@@ -42,6 +44,22 @@ public class AllFragment extends MvpFragment<AllPresenter> implements ViewPager.
     Toolbar allToolbar;
     @Bind(R.id.infinite_anim_circle)
     InfiniteIndicator infiniteAnimCircle;
+    @Bind(R.id.addtext_iv_article)
+    AddTextImageView addtextIvArticle;
+    @Bind(R.id.addtext_iv_answer)
+    AddTextImageView addtextIvAnswer;
+    @Bind(R.id.addtext_iv_reading)
+    AddTextImageView addtextIvReading;
+    @Bind(R.id.addtext_iv_serialize)
+    AddTextImageView addtextIvSerialize;
+    @Bind(R.id.addtext_iv_films)
+    AddTextImageView addtextIvFilms;
+    @Bind(R.id.addtext_iv_music)
+    AddTextImageView addtextIvMusic;
+    @Bind(R.id.addtext_iv_broadcast)
+    AddTextImageView addtextIvBroadcast;
+    @Bind(R.id.main_one_all)
+    PullToRefreshScrollView mainOneAll;
 
     private ArrayList<Page> pageViews;
 
@@ -68,6 +86,7 @@ public class AllFragment extends MvpFragment<AllPresenter> implements ViewPager.
         super.onViewCreated(view, savedInstanceState);
         animCircleIndicator();
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -138,4 +157,27 @@ public class AllFragment extends MvpFragment<AllPresenter> implements ViewPager.
 
     }
 
+    @OnClick({R.id.addtext_iv_article, R.id.addtext_iv_answer, R.id.addtext_iv_reading, R.id.addtext_iv_serialize, R.id.addtext_iv_films, R.id.addtext_iv_music, R.id.addtext_iv_broadcast, R.id.main_one_all})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.addtext_iv_article:
+                break;
+            case R.id.addtext_iv_answer:
+                break;
+            case R.id.addtext_iv_reading:
+                break;
+            case R.id.addtext_iv_serialize:
+                break;
+            case R.id.addtext_iv_films:
+                break;
+            case R.id.addtext_iv_music:
+                Intent intent=new Intent(getActivity(),MusicListActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.addtext_iv_broadcast:
+                break;
+            case R.id.main_one_all:
+                break;
+        }
+    }
 }

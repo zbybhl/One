@@ -16,7 +16,6 @@ import rx.subscriptions.CompositeSubscription;
 
 public class OnePresenter extends MvpPresenter<OneFragment> {
 
-    private DataManager dataManager;
     private CompositeSubscription compositeSubscription;
     private IdList idListBody;
     private OneList oneListBody;
@@ -25,7 +24,6 @@ public class OnePresenter extends MvpPresenter<OneFragment> {
     @Override
     public void setView(OneFragment view) {
         super.setView(view);
-        dataManager = new DataManager(view.getActivity());
         compositeSubscription = new CompositeSubscription();
     }
 

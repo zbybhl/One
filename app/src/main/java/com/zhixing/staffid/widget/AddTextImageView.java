@@ -50,6 +50,7 @@ public class AddTextImageView extends FrameLayout {
         mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
+        lp.bottomMargin = 50;
         mTextView.setLayoutParams(lp);
         initAttr(attrs);
         init();

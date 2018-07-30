@@ -58,11 +58,11 @@ import butterknife.OnClick;
 public class OneFragment extends MvpFragment<OnePresenter> {
 
     private static final int REQUEST_CODE = 0; // 请求码
-
-    // 所需的全部权限
-    static final String[] PERMISSIONS = new String[]{
-            Manifest.permission.READ_PHONE_STATE
-    };
+//
+//    // 所需的全部权限
+//    static final String[] PERMISSIONS = new String[]{
+//            Manifest.permission.READ_PHONE_STATE
+//    };
     @Bind(R.id.dayTextView)
     TextView dayTextView;
     @Bind(R.id.cityAndWeather)
@@ -91,10 +91,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
     LinearLayout llytThumnailContent;
 
     private PermissionsChecker mPermissionsChecker; // 权限检测器
-    private String channel;
-    private String version;
-    private String uuid;
-    private String platform = "android";
+
 
     private String oneListID;
     private IdList idList;
@@ -170,12 +167,11 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         isBottomShow = true;
         idList=null;
 
-        // 缺少权限时, 进入权限配置页面
-        if (mPermissionsChecker.lacksPermissions(PERMISSIONS)) {
-            startPermissionsActivity();
-        }
-        setSystemParameter();
-        presenter.getIdList(channel, version, uuid, platform);
+//        // 缺少权限时, 进入权限配置页面
+//        if (mPermissionsChecker.lacksPermissions(PERMISSIONS)) {
+//            startPermissionsActivity();
+//        }
+        presenter.getIdList(StaffIDApplication.channel, StaffIDApplication.version, StaffIDApplication.uuid, StaffIDApplication.platform);
 
     }
 
@@ -236,7 +232,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         protected String doInBackground(Void... params) {
             try {
                 Thread.sleep(2000);
-                presenter.getIdList(channel, version, uuid, platform);
+                presenter.getIdList(StaffIDApplication.channel, StaffIDApplication.version, StaffIDApplication.uuid, StaffIDApplication.platform);
                 return " ";
             } catch (InterruptedException e) {
                 Log.e("msg", "GetDataTask:" + e.getMessage());
@@ -252,11 +248,9 @@ public class OneFragment extends MvpFragment<OnePresenter> {
             super.onPostExecute(s);
         }
     }
-
-
-    private void startPermissionsActivity() {
-        PermissionsActivity.startActivityForResult(mvpActivity, REQUEST_CODE, PERMISSIONS);
-    }
+//    private void startPermissionsActivity() {
+//        PermissionsActivity.startActivityForResult(mvpActivity, REQUEST_CODE, PERMISSIONS);
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -275,7 +269,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         if(oneListID==null)
             oneListID = idList.getData().get(0);
 
-        presenter.getOneList(oneListID, channel, version, uuid, platform);
+        presenter.getOneList(oneListID, StaffIDApplication.channel, StaffIDApplication.version, StaffIDApplication.uuid, StaffIDApplication.platform);
         getOneList();
     }
 
@@ -314,27 +308,27 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         contentTextView.setText(photographInfo.getContent());
         words_infoTextView.setText(photographInfo.getWords_info());
         final ContentDao contentdao= StaffIDApplication.getDbInstance().getSession().getContentDao();
-
-        //TODO 存储contentlist到数据库，线程池中运行
-        Runnable saveContentlist= new Runnable(){
-            @Override
-            public void run() {
-                for(int i=0;i<contentLists.size();i++){
-                    Content content=new Content();
-                    content.setItem_id(contentLists.get(i).getItem_id());
-                    content.setCategory(Integer.parseInt(contentLists.get(i).getCategory()));
-                    content.setTitle(contentLists.get(i).getTitle());
-                    content.setImg_url(contentLists.get(i).getImg_url());
-                    content.setPic_info(contentLists.get(i).getPic_info());
-                    content.setWords_info(contentLists.get(i).getWords_info());
-                    content.setSubtitle(contentLists.get(i).getSubtitle());
-                    content.setPost_date(DateUtil.StringToDate(contentLists.get(i).getPost_date()));
-//                    contentdao.insert(content);
-                }
-            }
-        };
-        ExecutorService fixThreadPool = Executors.newFixedThreadPool(2);
-        fixThreadPool.execute(saveContentlist);
+//
+//        //TODO 存储contentlist到数据库，线程池中运行
+//        Runnable saveContentlist= new Runnable(){
+//            @Override
+//            public void run() {
+//                for(int i=0;i<contentLists.size();i++){
+//                    Content content=new Content();
+//                    content.setItem_id(contentLists.get(i).getItem_id());
+//                    content.setCategory(Integer.parseInt(contentLists.get(i).getCategory()));
+//                    content.setTitle(contentLists.get(i).getTitle());
+//                    content.setImg_url(contentLists.get(i).getImg_url());
+//                    content.setPic_info(contentLists.get(i).getPic_info());
+//                    content.setWords_info(contentLists.get(i).getWords_info());
+//                    content.setSubtitle(contentLists.get(i).getSubtitle());
+//                    content.setPost_date(DateUtil.StringToDate(contentLists.get(i).getPost_date()));
+////                    contentdao.insert(content);
+//                }
+//            }
+//        };
+//        ExecutorService fixThreadPool = Executors.newFixedThreadPool(2);
+//        fixThreadPool.execute(saveContentlist);
     }
 
     @Override
@@ -342,15 +336,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
         return R.layout.fragment_one;
     }
 
-    private void setSystemParameter() {
-        String TAG = "系统参数：";
-        channel = SystemUtil.getDeviceBrand().substring(4, 6);
-        Log.e(TAG, "手机厂商：" + channel);
-        version = SystemUtil.getSystemVersion();
-        Log.e(TAG, "Android系统版本号：" + version);
-        uuid = SystemUtil.getUUID(mvpActivity.getApplicationContext());
-        Log.e(TAG, "手机uuid：" + uuid);
-    }
+
 
     @Override
     public void showLoading() {
@@ -372,7 +358,7 @@ public class OneFragment extends MvpFragment<OnePresenter> {
      */
     private void getOneList() {
         for (String id : idList.getData()) {
-            presenter.getOneList(id, channel, version, uuid, platform, false); //这块如果是前面加载好的话就不用写这个重载了
+            presenter.getOneList(id, StaffIDApplication.channel, StaffIDApplication.version, StaffIDApplication.uuid, StaffIDApplication.platform, false); //这块如果是前面加载好的话就不用写这个重载了
         }
     }
 

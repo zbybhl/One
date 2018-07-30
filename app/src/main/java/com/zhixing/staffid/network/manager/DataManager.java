@@ -11,6 +11,7 @@ import com.zhixing.staffid.network.bean.MovieContent;
 import com.zhixing.staffid.network.bean.MoviePicture;
 import com.zhixing.staffid.network.bean.MusicComment;
 import com.zhixing.staffid.network.bean.MusicContent;
+import com.zhixing.staffid.network.bean.MusicList;
 import com.zhixing.staffid.network.bean.OneList;
 import com.zhixing.staffid.network.bean.OneWeekChineseComment;
 import com.zhixing.staffid.network.bean.OneWeekChineseContent;
@@ -49,7 +50,9 @@ public class DataManager {
     public Observable<EssayComment> getEssayComment(String item_id, String channel, String version, String uuid, String platform){
         return mRetrofitService.getEssayComment(item_id, channel, version, uuid, platform);
     }
-
+    public Observable<MusicList> getMusicList(String channel, String version, String uuid, String platform){
+        return mRetrofitService.getMusicList(channel,version, uuid, platform);
+    }
     public Observable<MusicContent> getMusicContent(String item_id, String channel, String version, String uuid, String platform){
         return mRetrofitService.getMusicContent(item_id, channel, version, uuid, platform);
     }

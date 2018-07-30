@@ -79,74 +79,117 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="分类导航" />
+                    android:text="分类导航"/>
 
                 <android.support.v7.widget.GridLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     app:rowCount="2"
-                    app:columnCount="4">
+                    app:columnCount="1">
 
-                    <com.zhixing.staffid.widget.AddTextImageView
-                        android:id="@+id/imageButton1"
-                        app:layout_rowWeight="1"
-                        app:layout_columnWeight="1"
-                        app:img_src="@mipmap/b"
-                        app:txt_content="问答"
-                        app:txt_color="@color/white" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/imageButton2"
-                        app:layout_rowWeight="1"
-                        app:layout_columnWeight="1"
-                        android:cropToPadding="true"
-                        android:src="@mipmap/b"
-                        android:scaleType="centerCrop"/>
+                        <com.zhixing.staffid.widget.AddTextImageView
+                            android:id="@+id/addtext_iv_article"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingRight="8dp"
+                            app:img_src="@mipmap/b"
+                            app:txt_content="图文"
+                            app:txt_color="@color/white" />
 
-                    <ImageView
-                        android:id="@+id/imageButton3"
-                        app:layout_rowWeight="1"
-                        app:layout_columnWeight="2"
-                        app:layout_column="2"
-                        app:layout_columnSpan="2"
-                        android:cropToPadding="true"
-                        android:src="@mipmap/b"
-                        android:scaleType="centerCrop"/>
+                        <com.zhixing.staffid.widget.AddTextImageView
+                            android:id="@+id/addtext_iv_answer"
+                            android:cropToPadding="true"
+                            android:paddingRight="8dp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:img_src="@mipmap/b"
+                            app:txt_content="问答"
+                            app:txt_color="@color/white"
+                            android:scaleType="centerCrop"/>
 
-                    <ImageView
-                        android:id="@+id/imageButton4"
-                        app:layout_rowWeight="1"
-                        app:layout_columnWeight="1"
-                        android:cropToPadding="true"
-                        android:src="@mipmap/b"
-                        android:scaleType="centerCrop"/>
-                    <ImageView
-                        android:id="@+id/imageButton5"
-                        app:layout_rowWeight="1"
-                        app:layout_columnWeight="1"
-                        android:cropToPadding="true"
-                        android:src="@mipmap/b"
-                        android:scaleType="centerCrop"/>
-                    <ImageView
-                        android:id="@+id/imageButton6"
-                        app:layout_rowWeight="1"
-                        app:layout_columnWeight="1"
-                        android:cropToPadding="true"
-                        android:src="@mipmap/b"
-                        android:scaleType="centerCrop"/>
-                    <ImageView
-                        android:id="@+id/imageButton7"
-                        app:layout_rowWeight="1"
-                        app:layout_columnWeight="1"
-                        android:cropToPadding="true"
-                        android:src="@mipmap/b"
-                        android:scaleType="centerCrop"/>
+                        <com.zhixing.staffid.widget.AddTextImageView
+                            android:id="@+id/addtext_iv_reading"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:cropToPadding="true"
+                            android:scaleType="centerCrop"
+                            app:img_src="@mipmap/b"
+                            app:txt_content="阅读"
+                            app:txt_color="@color/white"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_height="80dp"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingTop="10dp">
+
+                        <com.zhixing.staffid.widget.AddTextImageView
+                            android:id="@+id/addtext_iv_serialize"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingRight="8dp"
+                            android:cropToPadding="true"
+                            app:img_src="@mipmap/b"
+                            app:txt_content="连载"
+                            app:txt_color="@color/white"
+                            android:scaleType="centerCrop"/>
+
+                        <com.zhixing.staffid.widget.AddTextImageView
+                            android:id="@+id/addtext_iv_films"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingRight="8dp"
+                            android:cropToPadding="true"
+                            app:img_src="@mipmap/b"
+                            app:txt_content="影视"
+                            app:txt_color="@color/white"
+                            android:scaleType="centerCrop"/>
+
+                        <com.zhixing.staffid.widget.AddTextImageView
+                            android:id="@+id/addtext_iv_music"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingRight="8dp"
+                            android:cropToPadding="true"
+                            app:img_src="@mipmap/b"
+                            app:txt_content="音乐"
+                            app:txt_color="@color/white"
+                            android:scaleType="centerCrop"/>
+
+                        <com.zhixing.staffid.widget.AddTextImageView
+                            android:id="@+id/addtext_iv_broadcast"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:cropToPadding="true"
+                            app:img_src="@mipmap/b"
+                            app:txt_content="电台"
+                            app:txt_color="@color/white"
+                            android:scaleType="centerCrop"/>
+
+                    </LinearLayout>
 
                 </android.support.v7.widget.GridLayout>
+
             </LinearLayout>
 
             <View
@@ -155,9 +198,6 @@
                 android:background="@color/light_gray" />
 
         </LinearLayout>
-
-
-
-
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+
 </LinearLayout>

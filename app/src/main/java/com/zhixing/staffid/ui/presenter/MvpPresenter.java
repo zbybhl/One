@@ -2,6 +2,7 @@ package com.zhixing.staffid.ui.presenter;
 
 import android.content.Context;
 
+import com.zhixing.staffid.network.manager.DataManager;
 import com.zhixing.staffid.ui.IMvpView;
 
 import de.greenrobot.event.EventBus;
@@ -13,7 +14,7 @@ import de.greenrobot.event.EventBusException;
  */
 
 public class MvpPresenter<V extends IMvpView> implements IMvpPresenter<V> {
-
+    protected DataManager dataManager;
     protected V view;
     protected Context context;
     private EventBus eventBus;
@@ -28,6 +29,7 @@ public class MvpPresenter<V extends IMvpView> implements IMvpPresenter<V> {
     public void setView(V view) {
         this.view = view;
         this.context = view.getContext();
+        dataManager = new DataManager(this.context);
     }
 
     /*

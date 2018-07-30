@@ -5,13 +5,7 @@ import com.zhixing.staffid.network.bean.IdList;
 import com.zhixing.staffid.network.bean.OneList;
 
 public abstract class OneListCallback implements IMvpCallback {
-    /**
-     * 数据请求成功
-     *
-     * @param data 请求到的数据
-     */
-    @Override
-    public abstract void onSuccess(String data);
+
 
     public abstract void onSuccess(OneList oneList);
 
