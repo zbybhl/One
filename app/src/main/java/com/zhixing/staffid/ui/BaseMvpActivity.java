@@ -15,6 +15,8 @@ import com.zhixing.staffid.ui.presenter.MvpPresenter;
 import com.zhixing.staffid.util.AppLog;
 import com.zhixing.staffid.util.WidgetUtil;
 
+import butterknife.ButterKnife;
+
 public abstract class BaseMvpActivity<P extends MvpPresenter> extends AppCompatActivity implements IMvpView{
     protected P presenter;
     private ProgressDialog mProgressDialog;

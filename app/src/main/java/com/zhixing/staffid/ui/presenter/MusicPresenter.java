@@ -2,6 +2,7 @@ package com.zhixing.staffid.ui.presenter;
 
 import com.zhixing.staffid.network.IMvpCallback;
 import com.zhixing.staffid.network.bean.IdList;
+import com.zhixing.staffid.network.bean.MusicContent;
 import com.zhixing.staffid.network.bean.MusicList;
 import com.zhixing.staffid.ui.BaseMvpActivity;
 import com.zhixing.staffid.ui.activity.MusicListActivity;
@@ -34,7 +35,7 @@ public class MusicPresenter  extends MvpPresenter<MusicListActivity> {
                     @Override
                     public void onCompleted() {
                         if (musiclist != null){
-                            getView().showdata( musiclist);
+                            callback.onSuccess(musiclist.getData());
                         }
                         AppLog.d("Completed!");
                     }
@@ -46,7 +47,6 @@ public class MusicPresenter  extends MvpPresenter<MusicListActivity> {
 
                     @Override
                     public void onNext(MusicList musicList) {
-                        callback.onSuccess(musicList.getData());
                         musiclist =musicList;
                         AppLog.d("Item: " +musicList);
                     }
@@ -54,4 +54,5 @@ public class MusicPresenter  extends MvpPresenter<MusicListActivity> {
 
         );
     }
+
 }

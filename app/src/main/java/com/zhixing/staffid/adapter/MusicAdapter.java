@@ -26,7 +26,7 @@ public class MusicAdapter extends BaseAdapter {
     public MusicAdapter(Context context, List<MusicList.DataBean> musiclist) {
         this.musiclist = musiclist;
         this.context = context;
-        this.mInflater = LayoutInflater.from(context);;
+        this.mInflater = LayoutInflater.from(context);
     }
 
 

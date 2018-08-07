@@ -66,8 +66,6 @@ public class DateListFragment extends IBaseFragment {
             public void onItemClick(View view, int position) {
               getParentFragment().getChildFragmentManager().beginTransaction().hide(instance).commitAllowingStateLoss();
               ((OneFragment)getParentFragment()).updateView(dayLists.get(position).getId());
-
-
             }
         });
     }

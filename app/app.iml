@@ -120,6 +120,7 @@
     <orderEntry type="library" exported="" name="Gradle: com.android.support:transition-25.0.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.code.gson:gson:2.8.0@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.amitshekhar.android:debug-db-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:gridlayout-v7-25.0.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.greenrobot:greendao-generator:3.2.2@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.android.support:support-core-utils-25.0.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: javax.inject:javax.inject:1@jar" level="project" />

@@ -3,6 +3,8 @@
     package="com.zhixing.staffid" >
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 悬浮窗必加权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <application
         android:name=".app.StaffIDApplication"
         android:allowBackup="true"
@@ -26,9 +28,13 @@
             android:name=".ui.activity.MusicListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"
-            android:launchMode="singleTask"
-            />
-
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.activity.MusicContentActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:launchMode="singleTask" />
+        <service android:name=".service.MusicFloatService"/>
     </application>
 
 </manifest>

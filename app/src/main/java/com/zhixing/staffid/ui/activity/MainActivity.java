@@ -1,6 +1,9 @@
 package com.zhixing.staffid.ui.activity;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
@@ -150,6 +153,7 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
 

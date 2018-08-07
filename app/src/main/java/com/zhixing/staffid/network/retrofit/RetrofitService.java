@@ -68,8 +68,7 @@ public interface RetrofitService {
                                              @Query("uuid") String uuid,
                                              @Query("platform") String platform);
     @GET("channel/music/more/0")
-    Observable<MusicList> getMusicList(
-                                             @Query("channel") String channel,
+    Observable<MusicList> getMusicList(      @Query("channel") String channel,
                                              @Query("version") String version,
                                              @Query("uuid") String uuid,
                                              @Query("platform") String platform);

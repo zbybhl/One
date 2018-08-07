@@ -1,18 +1,20 @@
 package com.zhixing.staffid.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.zhixing.staffid.R;
 import com.zhixing.staffid.adapter.MusicAdapter;
-import com.zhixing.staffid.app.StaffIDApplication;
 import com.zhixing.staffid.network.IMvpCallback;
 import com.zhixing.staffid.network.bean.MusicList;
 import com.zhixing.staffid.ui.BaseMvpActivity;
+import com.zhixing.staffid.ui.fragment.OneFragment;
 import com.zhixing.staffid.ui.presenter.MusicPresenter;
 
 import java.util.List;
@@ -27,19 +29,21 @@ import butterknife.OnClick;
  */
 public class MusicListActivity extends BaseMvpActivity<MusicPresenter> {
 
+
     @Bind(R.id.iv_back)
     ImageView ivBack;
-    @Bind(R.id.tv_title)
-    TextView tvTitle;
-    @Bind(R.id.iv_archor)
-    ImageView ivArchor;
+    @Bind(R.id.tv_title_music)
+    TextView tvTitleMusic;
+    @Bind(R.id.iv_music_archor)
+    ImageView ivMusicArchor;
     @Bind(R.id.music_toolbar)
     Toolbar musicToolbar;
     @Bind(R.id.listview_music)
-    ListView listviewMusic;
+    PullToRefreshListView listviewMusic;
     private MusicAdapter adapter;
     private List<MusicList.DataBean> musiclist;
-    private volatile Boolean isShow=false;
+    private volatile Boolean isShow = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +54,7 @@ public class MusicListActivity extends BaseMvpActivity<MusicPresenter> {
     }
 
     public void initData() {
-        presenter.getMusicList(StaffIDApplication.channel, StaffIDApplication.version, StaffIDApplication.uuid, StaffIDApplication.platform, new IMvpCallback() {
+        presenter.getMusicList(OneFragment.channel, OneFragment.version, OneFragment.uuid, OneFragment.platform, new IMvpCallback() {
 
             @Override
             public void onSuccess(List<?> data) {
@@ -78,9 +82,18 @@ public class MusicListActivity extends BaseMvpActivity<MusicPresenter> {
 
     }
 
+
     public void initview() {
         adapter = new MusicAdapter(this, musiclist);
         listviewMusic.setAdapter(adapter);
+        listviewMusic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getContext(), MusicContentActivity.class);
+                intent.putExtra("item_id", musiclist.get(i).getItem_id());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -98,21 +111,21 @@ public class MusicListActivity extends BaseMvpActivity<MusicPresenter> {
         super.onDestroy();
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_title, R.id.listview_music})
+
+    @OnClick({R.id.iv_back, R.id.tv_title_music})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.tv_title:
-                if(isShow){
-                    ivArchor.setImageDrawable(getResources().getDrawable(R.drawable.arrow_up_black));
+            case R.id.tv_title_music:
+                if (isShow) {
+                    ivMusicArchor.setImageDrawable(getResources().getDrawable(R.drawable.arrow_down_black));
+                    isShow = false;
+                } else {
+                    ivMusicArchor.setImageDrawable(getResources().getDrawable(R.drawable.arrow_up_black));
+                    isShow = true;
                 }
-                else {
-                    ivArchor.setImageDrawable(getResources().getDrawable(R.drawable.arrow_down_black));
-                }
-                break;
-            case R.id.listview_music:
                 break;
         }
     }

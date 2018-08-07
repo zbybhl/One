@@ -53,8 +53,8 @@ public class DataManager {
     public Observable<MusicList> getMusicList(String channel, String version, String uuid, String platform){
         return mRetrofitService.getMusicList(channel,version, uuid, platform);
     }
-    public Observable<MusicContent> getMusicContent(String item_id, String channel, String version, String uuid, String platform){
-        return mRetrofitService.getMusicContent(item_id, channel, version, uuid, platform);
+    public Observable<MusicContent> getMusicContent(String item_id,String channel, String version, String uuid, String platform){
+        return mRetrofitService.getMusicContent(item_id,channel, version, uuid, platform);
     }
 
     public Observable<MusicComment> getMusicComment(String item_id, String channel, String version, String uuid, String platform){

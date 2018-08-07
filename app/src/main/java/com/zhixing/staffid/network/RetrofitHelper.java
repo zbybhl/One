@@ -2,8 +2,16 @@ package com.zhixing.staffid.network;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.zhixing.staffid.network.retrofit.RetrofitService;
+
+import java.lang.reflect.Type;
+import java.util.Date;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -17,7 +25,19 @@ public class RetrofitHelper {
 
     private Context mContext;
     OkHttpClient client = OkHttpUtil.newOkHttpClient();
-    GsonConverterFactory factory = GsonConverterFactory.create(new GsonBuilder().create());
+    GsonBuilder builder = new GsonBuilder();
+    GsonConverterFactory factory = null;
+
+    {
+//        // Register an adapter to manage the date types as long values
+//        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+//            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+//                return new Date();
+//            }
+//        });
+        builder.setDateFormat("YYYY-MM-dd HH:mm:ss");
+        factory = GsonConverterFactory.create(builder.create());
+    }
     private volatile static RetrofitHelper instance = null;
 
     private Retrofit mRetrofit = null;
